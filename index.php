@@ -1,4 +1,7 @@
 <?php
+	// Inclusion du fichier database.php pour utiliser les fonctions de la base de données
+	require_once 'database.php';
+
 	define("ROOT", dirname(__FILE__)); // va nous servir de racine pour le chargement des fichiers
 	require_once(ROOT . '/utils/functions.php');
 	$FORM = extractForm();		// Extract le formulaire en fonction de la methode HTTP
@@ -7,5 +10,8 @@
 	// J'ai ma route, donc je peux charger mon controleur
 	$controller = createController($FORM, $ROUTE);
 	$controller->execute();
+
+	$conn = create_database_connection();
+	echo $conn
 ?>
 
