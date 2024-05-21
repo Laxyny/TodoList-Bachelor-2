@@ -28,6 +28,7 @@ class TodoGetController extends AbstractController {
     public function processRequest() {
         try {
             $this->todos = $this->service->fetchAll();
+            error_log('Todos fetched: ' . print_r($this->todos, true)); // Log the fetched todos
         } catch (Exception $e) {
             echo json_encode(['error' => 'Error fetching todos: ' . $e->getMessage()]);
             exit();

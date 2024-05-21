@@ -10,7 +10,7 @@ class TodoDao {
     }
 
     public function fetchAll() {
-        $stmt = $this->conn->prepare("SELECT * FROM todo");
+        $stmt = $this->conn->prepare("SELECT id_todo, titre, description, date_creation, date_echeance, id_statut, id_priorite, id_utilisateur FROM todo");
         if (!$stmt) {
             error_log('Error preparing statement: ' . $this->conn->error);
             return [];
@@ -19,6 +19,7 @@ class TodoDao {
         $result = $stmt->get_result();
         $todos = [];
         while ($row = $result->fetch_assoc()) {
+            error_log('Row data: ' . print_r($row, true)); // Log the row data
             $todo = new Todo(
                 $row['id_todo'],
                 $row['titre'],
