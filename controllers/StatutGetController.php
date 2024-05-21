@@ -1,5 +1,5 @@
 <?php
-define('ROOT', dirname(__DIR__)); // Définir la constante ROOT pour qu'elle pointe vers le répertoire racine
+define('ROOT', dirname(__DIR__));
 
 require(ROOT . '/utils/AbstractController.php');
 require(ROOT . '/service/StatutService.php');

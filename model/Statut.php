@@ -1,6 +1,6 @@
 <?php
 
-	class Statut {
+/*class Statut {
 
 		public int $id;
 		public string $label;
@@ -22,6 +22,17 @@
                         $this->label = $_label;
                 }
 
-	}
+	}*/
 
-?>
+
+class Statut
+{
+	public $id_statut;
+	public $libelle;
+
+	public function __construct($id_statut, $libelle)
+	{
+		$this->id_statut = $id_statut;
+		$this->libelle = $libelle;
+	}
+}

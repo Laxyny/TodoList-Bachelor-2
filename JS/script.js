@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function() {
         return;
     }
     
-    fetch('controllers/StatutGetController.php')
+    fetch('controllers/TodoGetController.php')
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -21,8 +21,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 todoList.appendChild(errorItem);
             } else {
                 data.forEach(item => {
+                    console.log('Processing item:', item); // Log each item processed
                     const listItem = document.createElement('div');
-                    listItem.textContent = item.libelle; // assuming 'libelle' is a property of the status
+                    listItem.textContent = item.titre + ': ' + item.description; // assuming 'titre' and 'description' are properties of the todo
                     console.log('Adding item to DOM:', listItem.textContent); // Log each item added
                     todoList.appendChild(listItem);
                 });

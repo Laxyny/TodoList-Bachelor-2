@@ -1,36 +1,28 @@
 <?php
-
 class DbSingleton {
-	private static $_instance = null;
-	private $pdo;
+    private static $instance = null;
+    private $conn;
+    private $servername = "localhost";
+    private $username = "todo";
+    private $password = "openit";
+    private $dbname = "todo_list";
 
-	private function __construct() {
-		// Database source name
-		$DSN = 'mysql:host=localhost;port=3306;dbname=todo';
-		try { // create pdo instance
-			// We can create it for multiple databases
-			$this->pdo = new PDO($DSN, 'todo', 'blabla');
-			$this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		} catch (PDOException $e) {
-			// Bad credential ? DBMS Driver not found ? Connection fail ?
-			die("Error ! : " . $e->getMessage());
-		}
-	}
+    private function __construct() {
+        $this->conn = new mysqli($this->servername, $this->username, $this->password, $this->dbname);
+        if ($this->conn->connect_error) {
+            die(json_encode(['error' => "Connection failed: " . $this->conn->connect_error]));
+        }
+    }
 
-	public function getPdo() {
-		return $this->pdo;
-	}
+    public static function getInstance() {
+        if (!self::$instance) {
+            self::$instance = new DbSingleton();
+        }
+        return self::$instance;
+    }
 
-	public static function getInstance() {
-		if (is_null(self::$_instance)) {
-			self::$_instance = new DbSingleton();
-		}
-		return self::$_instance;
-	}
-
-	function __destruct() {
-		unset($this->pdo);
-	}
+    public function getConnection() {
+        return $this->conn;
+    }
 }
-
 ?>
