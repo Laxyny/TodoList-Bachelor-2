@@ -1,5 +1,5 @@
 <?php
-require_once('../database.php'); // Chemin ajusté selon votre structure de fichiers
+require_once('../database.php'); // Ajustez le chemin selon votre structure de fichiers
 require_once('../model/Todo.php');
 
 class TodoDao {

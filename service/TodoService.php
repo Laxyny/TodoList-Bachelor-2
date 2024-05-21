@@ -2,6 +2,7 @@
 require_once(ROOT . '/utils/AbstractService.php');
 require_once(ROOT . '/utils/BaseService.php');
 require_once(ROOT . '/dao/TodoDao.php');
+require_once(ROOT . '/utils/DbSingleton.php'); // Ajout de l'inclusion de DbSingleton
 
 class TodoService extends AbstractService implements BaseService {
     private $todoDao;
