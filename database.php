@@ -1,24 +1,25 @@
 <?php
+class Database {
+    private static $conn;
 
-// Crée une connexion à la base de données et retourne l'objet de connexion
-function create_database_connection()
-{
-    // adresse, nom utilisateur, mdp et nom de la base de données
-    $servername = "localhost";
-    $username = "root";
-    $password = "";
-    $dbname = "todo";
+    public static function getConnection() {
+        if (self::$conn === null) {
+            $servername = "localhost";
+            $username = "todo";
+            $password = "openit";
+            $dbname = "todo_list";
 
-    // connexion
-    $conn = new mysqli($servername, $username, $password, $dbname);
+            self::$conn = new mysqli($servername, $username, $password, $dbname);
 
-    // Vérifie si la connexion a réussi, sinon affiche un message d'erreur et termine le script
-    if ($conn->connect_error) {
-        die("Erreur de connexion " . $conn->connect_error);
+            // Vérification de la connexion
+            if (self::$conn->connect_error) {
+                die("Connexion échouée: " . self::$conn->connect_error);
+            }
+        }
+        return self::$conn;
     }
-
-    // Retourne l'objet de connexion
-    return $conn;
 }
 
+// Utiliser la connexion dans les DAO sans modifier les fichiers
+$conn = Database::getConnection();
 ?>

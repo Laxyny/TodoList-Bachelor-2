@@ -9,7 +9,8 @@
 
 		function __construct() {
 			// On n'utilise que les méthodes de l'interface
-			$this->statutDao = new StatutDao();
+			//$this->statutDao = new StatutDao();
+			$this->statutDao = new StatutDao(DbSingleton::getInstance()->getConnection());
 		}
 
 		function fetchAll() {
