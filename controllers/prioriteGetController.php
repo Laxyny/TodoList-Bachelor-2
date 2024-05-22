@@ -4,8 +4,7 @@
 
 	class PrioriteGetController extends AbstractController {
 		private $service;
-
-		private $statuts;
+		private $priorite;
 
 		public function __construct($form) {
 			parent::__construct($form, 'PrioriteGetController');
@@ -14,18 +13,18 @@
 
 		protected function checkForm() {
 			// Je vais controller si j'ai un id, et je vais le stocker
-            if (! isset($this->form['id'])) {
+            if (! isset($this->form['id_priotite'])) {
                 error_log(__FUNCTION__. ' listing');
                 //Ici je n'ai pas d'id, donc c'est pour un listing
             } else {
                 error_log(__FUNCTION__. ' une seule priorite');
-                $this->id = $this->form['id'];
+                $this->priorite = $this->form['id'];
             }
 		}
                 protected function checkCybersec() {
-			if (isset($this->id)) {
+			if (isset($this->priorite)) {
                 // Est ce que c'est un nombre entier ?
-                if (! ctype_digit($this->id)) {
+                if (! ctype_digit($this->priorite)) {
                     error_log(__FUNCTION__. ' id est bien un nombre entier');
                 } else {
                     _400_Bad_Request();
