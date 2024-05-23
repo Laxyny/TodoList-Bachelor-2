@@ -10,25 +10,13 @@ class UtilisateurDao {
     }
 
     public function fetchAll() {
-        $stmt = $this->conn->prepare("SELECT id_utilisateur, email, mot_de_passe FROM utilisateurs");
-        if (!$stmt) {
-            error_log('Error preparing statement: ' . $this->conn->error);
-            return [];
-        }
+        $stmt = $this->conn->prepare("SELECT * FROM utilisateurs");
         $stmt->execute();
         $result = $stmt->get_result();
-        $utilisateur = [];
+        $utilisateurs = [];
         while ($row = $result->fetch_assoc()) {
-            error_log('Row data: ' . print_r($row, true)); // Log the row data
-            $utilisateur = new Utilisateur(
-                $row['id_utilisateur'],
-                $row['email'],
-                $row['mot_de_passe']
-            );
-            $utilisateurs[] = $utilisateur;
-            error_log('Utilisateurs object created: ' . print_r($utilisateur, true)); // Log each object
+            $utilisateurs[] = new Utilisateur($row['id_utilisateur'], $row['email'], $row['mot_de_passe']);
         }
-        error_log('Data fetched from database: ' . print_r($utilisateurs, true)); // Log the fetched data
         return $utilisateurs;
     }
 
@@ -48,6 +36,7 @@ class UtilisateurDao {
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
+        error_log("Login query result: " . print_r($result->fetch_assoc(), true));
         if ($result->num_rows === 1) {
             $user = $result->fetch_assoc();
             if ($user['mot_de_passe'] === $password) {
@@ -55,6 +44,12 @@ class UtilisateurDao {
             }
         }
         return null;
+    }
+
+    public function register($email, $password) {
+        $stmt = $this->conn->prepare("INSERT INTO utilisateurs (email, mot_de_passe) VALUES (?, ?)");
+        $stmt->bind_param("ss", $email, $password);
+        return $stmt->execute();
     }
 }
 ?>

@@ -1,11 +1,50 @@
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     const todoList = document.getElementById('todo-list');
-    const utilisateur = document.getElementById('utilisateur');
-    if (!todoList || !utilisateur) {
-        console.error('Element not found.');
+    const loginForm = document.getElementById('loginForm');
+    const loginError = document.getElementById('loginError');
+    const registerForm = document.getElementById('registerForm');
+    const registerError = document.getElementById('registerError');
+
+    if (!todoList) {
+        console.error('Element with ID "todo-list" not found.');
         return;
     }
-    
+
+    registerForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        const email = document.getElementById('registerEmail').value;
+        const password = document.getElementById('registerPassword').value;
+
+        const requestData = { email, password };
+        console.log('Sending register data:', requestData);
+
+        fetch('controllers/RegisterController.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestData)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    // Hide the register form and show the login form
+                    registerForm.style.display = 'none';
+                } else {
+                    registerError.textContent = data.error;
+                }
+            })
+            .catch(error => {
+                console.error('Error during registration:', error);
+            });
+    });
+
     fetch('controllers/TodoGetController.php')
         .then(response => {
             if (!response.ok) {
@@ -26,7 +65,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     const listItem = document.createElement('div');
 
                     listItem.textContent = item.titre + ': ' + item.description + ' date création: ' + item.date_creation + ' date échéance: ' + item.date_creation
-                    + ' id utilisateur: ' + item.id_utilisateur
+                        + ' id utilisateur: ' + item.id_utilisateur
 
                     console.log('Adding item to DOM:', listItem.textContent);
                     todoList.appendChild(listItem);
@@ -40,9 +79,9 @@ document.addEventListener("DOMContentLoaded", function() {
             todoList.appendChild(errorItem);
         });
 
-        
-        
-        fetch('controllers/UtilisateurGetController.php')
+
+
+    fetch('controllers/UtilisateurGetController.php')
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
