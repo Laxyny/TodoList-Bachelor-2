@@ -6,12 +6,12 @@ require(ROOT . '/service/UtilisateurService.php');
 
 session_start();
 
-class LoginController extends AbstractController {
+class LoginGetController extends AbstractController {
     private $service;
     private $response;
 
     public function __construct($form) {
-        parent::__construct($form, 'LoginController');
+        parent::__construct($form, 'LoginGetController');
         $this->service = new UtilisateurService();
     }
 
@@ -59,7 +59,7 @@ try {
         if (json_last_error() !== JSON_ERROR_NONE) {
             throw new Exception('Invalid JSON input: ' . json_last_error_msg());
         }
-        $controller = new LoginController($form);
+        $controller = new LoginGetController($form);
         $controller->processRequest();
         $controller->processResponse();
     } else {
