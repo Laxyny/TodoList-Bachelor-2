@@ -43,6 +43,7 @@ class UtilisateurDao {
         }
         return null;
     }
+    
     public function register($email, $password) {
         $stmt = $this->conn->prepare("INSERT INTO utilisateurs (email, mot_de_passe) VALUES (?, ?)");
         $stmt->bind_param("ss", $email, $password);
