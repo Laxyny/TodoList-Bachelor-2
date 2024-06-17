@@ -16,11 +16,11 @@ class TodoService extends AbstractService implements BaseService {
     }
 
     public function fetch($id) {
-        // Implémentation si nécessaire
+        return $this->todoDao->fetch($id);
     }
 
     public function insert($entity) {
-        // Implémentation si nécessaire
+        return $this->todoDao->insert($entity);
     }
 
     public function update($entity) {

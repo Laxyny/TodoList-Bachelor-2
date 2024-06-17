@@ -14,11 +14,20 @@
         <div id="loginError"></div>
     </form>
 
+    <button id="logoutButton" style="display: none;">Logout</button>
+
     <form id="registerForm">
         <input type="email" id="registerEmail" placeholder="Email">
         <input type="password" id="registerPassword" placeholder="Password">
         <button type="submit">Register</button>
         <div id="registerError"></div>
+    </form>
+
+    <form id="todoForm" style="display: none;">
+        <input type="text" id="todoTitle" placeholder="Title">
+        <input type="text" id="todoDescription" placeholder="Description">
+        <input type="date" id="todoDueDate" placeholder="Due Date">
+        <button type="submit">Add Todo</button>
     </form>
 
     <script src="JS/script.js"></script>

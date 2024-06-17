@@ -27,7 +27,13 @@ class TodoGetController extends AbstractController {
 
     public function processRequest() {
         try {
-            $this->todos = $this->service->fetchAll();
+            $id = $this->form['userId'] ?? null;
+            if ($id === null) {
+                echo json_encode(['error' => 'User ID is required']);
+                exit();
+            }
+
+            $this->todos = $this->service->fetch($id);
             error_log('Todos fetched: ' . print_r($this->todos, true)); // Log the fetched todos
         } catch (Exception $e) {
             echo json_encode(['error' => 'Error fetching todos: ' . $e->getMessage()]);
