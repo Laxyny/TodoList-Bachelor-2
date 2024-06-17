@@ -26,26 +26,6 @@ document.addEventListener("DOMContentLoaded", function () {
             },
             body: JSON.stringify(requestData)
         })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    // Hide the register form and show the login form
-                    registerForm.style.display = 'none';
-                } else {
-                    registerError.textContent = data.error;
-                }
-            })
-            .catch(error => {
-                console.error('Error during registration:', error);
-            });
-    });
-
-    fetch('controllers/TodoGetController.php')
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -53,21 +33,79 @@ document.addEventListener("DOMContentLoaded", function () {
             return response.json();
         })
         .then(data => {
-            console.log('Data received from API:', data); // Log data for debugging
-            todoList.innerHTML = ''; // Clear any existing content
+            if (data.success) {
+                registerForm.style.display = 'none';
+            } else {
+                registerError.textContent = data.error;
+            }
+        })
+        .catch(error => {
+            console.error('Error during registration:', error);
+        });
+    });
+
+    loginForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        const email = document.getElementById('loginEmail').value;
+        const password = document.getElementById('loginPassword').value;
+
+        const requestData = { email, password };
+        console.log('Sending login data:', requestData);
+
+        fetch('controllers/LoginPostController.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestData)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.text();
+        })
+        .then(text => {
+            try {
+                const data = JSON.parse(text);
+                if (data.success) {
+                    localStorage.setItem('userId', data.userId);
+                    loginForm.style.display = 'none';
+                    fetchTodos(data.userId);
+                } else {
+                    loginError.textContent = data.error;
+                }
+            } catch (error) {
+                console.error('Error parsing JSON:', error, 'Response:', text);
+                loginError.textContent = 'Invalid server response';
+            }
+        })
+        .catch(error => {
+            console.error('Error during login:', error);
+            loginError.textContent = 'Network error';
+        });
+    });
+
+    function fetchTodos(userId) {
+        fetch(`controllers/TodoGetController.php?userId=${userId}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Data received from API:', data);
+            todoList.innerHTML = '';
             if (data.error) {
                 const errorItem = document.createElement('div');
                 errorItem.textContent = 'Error: ' + data.error;
                 todoList.appendChild(errorItem);
             } else {
                 data.forEach(item => {
-                    console.log('Processing item:', item);
                     const listItem = document.createElement('div');
-
-                    listItem.textContent = item.titre + ': ' + item.description + ' date création: ' + item.date_creation + ' date échéance: ' + item.date_creation
-                        + ' id utilisateur: ' + item.id_utilisateur
-
-                    console.log('Adding item to DOM:', listItem.textContent);
+                    listItem.textContent = `${item.titre}: ${item.description} date création: ${item.date_creation} date échéance: ${item.date_echeance}`;
                     todoList.appendChild(listItem);
                 });
             }
@@ -78,37 +116,10 @@ document.addEventListener("DOMContentLoaded", function () {
             errorItem.textContent = 'Error: ' + error.message;
             todoList.appendChild(errorItem);
         });
+    }
 
-
-
-    fetch('controllers/UtilisateurGetController.php')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Data received from API:', data); // Log data for debugging
-            utilisateur.innerHTML = ''; // Clear any existing content
-            if (data.error) {
-                const errorItem = document.createElement('div');
-                errorItem.textContent = 'Error: ' + data.error;
-                utilisateur.appendChild(errorItem);
-            } else {
-                data.forEach(item => {
-                    console.log('Processing item:', item);
-                    const listItem = document.createElement('div');
-                    listItem.textContent = item.id_utilisateur + ': ' + item.email + ' ' + item.mot_de_passe;
-                    console.log('Adding item to DOM:', listItem.textContent);
-                    utilisateur.appendChild(listItem);
-                });
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching utilisateurs list:', error);
-            const errorItem = document.createElement('div');
-            errorItem.textContent = 'Error: ' + error.message;
-            utilisateur.appendChild(errorItem);
-        });
+    const storedUserId = localStorage.getItem('userId');
+    if (storedUserId) {
+        fetchTodos(storedUserId);
+    }
 });

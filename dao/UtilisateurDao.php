@@ -36,16 +36,13 @@ class UtilisateurDao {
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
-        error_log("Login query result: " . print_r($result->fetch_assoc(), true));
-        if ($result->num_rows === 1) {
-            $user = $result->fetch_assoc();
-            if ($user['mot_de_passe'] === $password) {
-                return new Utilisateur($user['id_utilisateur'], $user['email'], $user['mot_de_passe']);
-            }
+        $user = $result->fetch_assoc();
+        error_log("Login query result: " . print_r($user, true));
+        if ($user && $user['mot_de_passe'] === $password) {
+            return new Utilisateur($user['id_utilisateur'], $user['email'], $user['mot_de_passe']);
         }
         return null;
     }
-
     public function register($email, $password) {
         $stmt = $this->conn->prepare("INSERT INTO utilisateurs (email, mot_de_passe) VALUES (?, ?)");
         $stmt->bind_param("ss", $email, $password);

@@ -2,38 +2,25 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Todo List</title>
 </head>
 <body>
-    <div id="login-form">
-        <h2>Login</h2>
-        <form id="loginForm" method="POST">
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required><br>
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required><br>
-            <button type="submit">Login</button>
-        </form>
-        <div id="loginError" style="color: red;"></div>
-    </div>
-    <div id="register-form">
-        <h2>Register</h2>
-        <form id="registerForm" method="POST">
-            <label for="registerEmail">Email:</label>
-            <input type="email" id="registerEmail" name="registerEmail" required><br>
-            <label for="registerPassword">Password:</label>
-            <input type="password" id="registerPassword" name="registerPassword" required><br>
-            <button type="submit">Register</button>
-        </form>
-        <div id="registerError" style="color: red;"></div>
-    </div>
-    <div id="utilisateur">
-        <!-- Existing code for displaying users -->
-    </div>
-    <div id="todo-list">
-        <!-- Existing code for displaying todos -->
-    </div>
-    <script src="./JS/script.js"></script>
+    <div id="todo-list"></div>
+
+    <form id="loginForm">
+        <input type="email" id="loginEmail" placeholder="Email">
+        <input type="password" id="loginPassword" placeholder="Password">
+        <button type="submit">Login</button>
+        <div id="loginError"></div>
+    </form>
+
+    <form id="registerForm">
+        <input type="email" id="registerEmail" placeholder="Email">
+        <input type="password" id="registerPassword" placeholder="Password">
+        <button type="submit">Register</button>
+        <div id="registerError"></div>
+    </form>
+
+    <script src="JS/script.js"></script>
 </body>
 </html>

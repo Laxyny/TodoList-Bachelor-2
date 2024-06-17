@@ -1,17 +1,26 @@
 <?php
 define('ROOT', dirname(__DIR__));
 
+// Désactiver l'affichage des erreurs
+ini_set('display_errors', 0);
+ini_set('display_startup_errors', 0);
+error_reporting(E_ALL);
+
+// Enregistrer les erreurs dans un fichier de log
+ini_set('log_errors', 1);
+ini_set('error_log', ROOT . '/logs/error.log');
+
 require(ROOT . '/utils/AbstractController.php');
 require(ROOT . '/service/UtilisateurService.php');
 
 session_start();
 
-class LoginGetController extends AbstractController {
+class LoginPostController extends AbstractController {
     private $service;
     private $response;
 
     public function __construct($form) {
-        parent::__construct($form, 'LoginGetController');
+        parent::__construct($form, 'LoginPostController');
         $this->service = new UtilisateurService();
     }
 
@@ -59,7 +68,7 @@ try {
         if (json_last_error() !== JSON_ERROR_NONE) {
             throw new Exception('Invalid JSON input: ' . json_last_error_msg());
         }
-        $controller = new LoginGetController($form);
+        $controller = new LoginPostController($form);
         $controller->processRequest();
         $controller->processResponse();
     } else {
@@ -70,4 +79,3 @@ try {
     header('Content-Type: application/json');
     echo json_encode(['success' => false, 'error' => 'Internal server error: ' . $e->getMessage()]);
 }
-?>
