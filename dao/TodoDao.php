@@ -135,24 +135,21 @@ class TodoDao {
         return $todos;
     }
 
-    public function insert($todo) {
-        $stmt = $this->conn->prepare("INSERT INTO todo (titre, description, date_creation, date_echeance, id_statut, id_priorite, id_utilisateur) VALUES (?, ?, ?, ?, ?, ?, ?)");
+    public function insert($title, $description, $due_date, $user_id, $status_id, $priority_id) {
+        $stmt = $this->conn->prepare("INSERT INTO todo (titre, description, date_echeance, id_utilisateur, id_statut, id_priorite) VALUES (?, ?, ?, ?, ?, ?)");
         if (!$stmt) {
             error_log('Error preparing statement: ' . $this->conn->error);
-            return false;
+            return ['success' => false, 'error' => $this->conn->error];
         }
-        $stmt->bind_param(
-            "ssssiii",
-            $todo->titre,
-            $todo->description,
-            $todo->date_creation,
-            $todo->date_echeance,
-            $todo->id_statut,
-            $todo->id_priorite,
-            $todo->id_utilisateur
-        );
-        return $stmt->execute();
+        $stmt->bind_param("sssiii", $title, $description, $due_date, $user_id, $status_id, $priority_id);
+        $result = $stmt->execute();
+        if (!$result) {
+            error_log('Error executing statement: ' . $stmt->error);
+            return ['success' => false, 'error' => $stmt->error];
+        }
+        return ['success' => true];
     }
+    
 
     public function editStatus($id, $newStatus) {
         $stmt = $this->conn->prepare("UPDATE todo SET id_statut = ? WHERE id_todo = ?");

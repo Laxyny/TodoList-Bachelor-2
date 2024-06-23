@@ -27,28 +27,11 @@ class TodoPostController extends AbstractController {
 
     public function processRequest() {
         $action = $this->form['action'] ?? '';
+        error_log('TodoPostController action: ' . $action);
 
         switch ($action) {
-            case 'add_todo':
-                $title = $this->form['title'] ?? '';
-                $description = $this->form['description'] ?? '';
-                $dueDate = $this->form['dueDate'] ?? '';
-                $userId = $this->form['userId'] ?? '';
-                if (empty($title) || empty($description) || empty($dueDate) || empty($userId)) {
-                    $this->response = ['success' => false, 'error' => 'All fields are required'];
-                    return;
-                }
-                $this->service->insert(new Todo(
-                    null,
-                    $title,
-                    $description,
-                    date('Y-m-d'),
-                    $dueDate,
-                    1, // default status id
-                    1, // default priority id
-                    $userId
-                ));
-                $this->response = ['success' => true];
+            case 'create_todo':
+                $this->response = $this->service->create($this->form);
                 break;
             
             case 'edit_status':
@@ -99,11 +82,14 @@ class TodoPostController extends AbstractController {
             default:
                 $this->response = ['success' => false, 'error' => 'Invalid action'];
         }
+        error_log('TodoPostController response: ' . print_r($this->response, true));
     }
 
     public function processResponse() {
         header('Content-Type: application/json');
-        echo json_encode($this->response);
+        $jsonResponse = json_encode($this->response);
+        error_log('TodoPostController JSON response: ' . $jsonResponse);
+        echo $jsonResponse;
     }
 }
 

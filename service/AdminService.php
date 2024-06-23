@@ -38,19 +38,21 @@ class AdminService extends AbstractService implements BaseService {
         $utilisateur = $data['utilisateur'] ?? '';
         $password = $data['password'] ?? '';
         $role = $data['role'] ?? 'user';
-
+    
         if (empty($utilisateur) || empty($password)) {
             return ['success' => false, 'error' => 'Utilisateur and password are required'];
         }
-
-        return $this->utilisateurDao->register($utilisateur, $password, $role);
+    
+        $result = $this->utilisateurDao->register($utilisateur, $password, $role);
+        error_log('Create user result: ' . print_r($result, true));
+        return $result;
     }
 
     public function deleteUser($id) {
-        return $this->utilisateurDao->delete($id);
+        //return $this->utilisateurDao->delete($id);
     }
 
-    public function listStatuses() {
+    public function listStatus() {
         return $this->statutDao->fetchAll();
     }
 

@@ -27,6 +27,17 @@
         <input type="text" id="todoTitle" placeholder="Title">
         <input type="text" id="todoDescription" placeholder="Description">
         <input type="date" id="todoDueDate" placeholder="Due Date">
+        <input type="hidden" id="userId" value="/* ID de l'utilisateur connecté */">
+        <select id="todoStatus">
+            <option value="1">Créé</option>
+            <option value="2">En cours</option>
+            <option value="3">Effectué</option>
+        </select>
+        <select id="todoPriority">
+            <option value="1">Basse</option>
+            <option value="2">Normale</option>
+            <option value="3">Haute</option>
+        </select>
         <button type="submit">Add Todo</button>
     </form>
 
@@ -38,8 +49,8 @@
             <div id="userList"></div>
             <h4>Create User</h4>
             <form id="createUserForm">
-                <input type="text" id="createUserUtilisateur" placeholder="Utilisateur">
-                <input type="password" id="createUserPassword" placeholder="Password">
+                <input type="text" id="createUserUtilisateur" placeholder="Utilisateur" required>
+                <input type="password" id="createUserPassword" placeholder="Password" required>
                 <select id="createUserRole">
                     <option value="user">User</option>
                     <option value="admin">Admin</option>

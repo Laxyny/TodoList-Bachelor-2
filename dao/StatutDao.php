@@ -17,7 +17,7 @@ class StatutDao extends AbstractDao implements BaseDao
 
 	public function fetchAll()
 	{
-		$stmt = $this->conn->prepare("SELECT id_statut, libelle FROM statuts");
+		$stmt = $this->conn->prepare("SELECT * FROM statut");
 		if (!$stmt) {
 			error_log('Error preparing statement: ' . $this->conn->error);
 			return [];

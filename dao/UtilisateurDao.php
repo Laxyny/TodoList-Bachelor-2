@@ -44,10 +44,19 @@ class UtilisateurDao {
         return null;
     }
     
-    public function register($utilisateur, $password) {
-        $stmt = $this->conn->prepare("INSERT INTO utilisateurs (utilisateur, mot_de_passe) VALUES (?, ?)");
-        $stmt->bind_param("ss", $utilisateur, $password);
-        return $stmt->execute();
+    public function register($utilisateur, $password, $role) {
+        $stmt = $this->conn->prepare("INSERT INTO utilisateurs (utilisateur, mot_de_passe, role) VALUES (?, ?, ?)");
+        if (!$stmt) {
+            error_log('Error preparing statement: ' . $this->conn->error);
+            return ['success' => false, 'error' => $this->conn->error];
+        }
+        $stmt->bind_param("sss", $utilisateur, $password, $role);
+        $result = $stmt->execute();
+        if (!$result) {
+            error_log('Error executing statement: ' . $stmt->error);
+            return ['success' => false, 'error' => $stmt->error];
+        }
+        return ['success' => true];
     }
 }
 ?>

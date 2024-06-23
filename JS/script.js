@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const todoTitle = document.getElementById('todoTitle');
     const todoDescription = document.getElementById('todoDescription');
     const todoDueDate = document.getElementById('todoDueDate');
+    const userId = document.getElementById('userId').value;
     const todoStatus = document.getElementById('todoStatus');
     const todoPriority = document.getElementById('todoPriority');
 
@@ -144,7 +145,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const priorityId = todoPriority.value;
         const userId = localStorage.getItem('userId');
 
-        const requestData = { action: 'add_todo', title, description, dueDate, statusId, priorityId, userId };
+        const requestData = { action: 'create_todo', title, description, dueDate, statusId, priorityId, userId };
         console.log('Sending todo data:', requestData);
 
         fetch('controllers/TodoPostController.php', {
@@ -195,7 +196,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
             data.forEach(user => {
                 const userItem = document.createElement('div');
-                userItem.textContent = `${user.utilisateur} (${user.role})`;
+                userItem.textContent = `${user.utilisateur} ${user.mot_de_passe} (${user.role})`;
                 userList.appendChild(userItem);
             });
         })
@@ -218,28 +219,40 @@ document.addEventListener("DOMContentLoaded", function () {
             },
             body: JSON.stringify(requestData)
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                createUserUtilisateur.value = '';
-                createUserPassword.value = '';
-                createUserRole.value = 'user';
-                listUsersButton.click();
-            } else {
-                console.error('Error creating user:', data.error);
+        .then(response => response.text())
+        .then(text => {
+            console.log('Raw response from API:', text);
+            try {
+                const data = JSON.parse(text);
+                console.log('Parsed JSON data:', data);
+                if (data.success) {
+                    console.log('User created successfully');
+                    // Optionally refresh the user list
+                    listUsersButton.click();
+                } else {
+                    console.error('Error creating user:', data.error);
+                }
+            } catch (e) {
+                console.error('Error parsing JSON:', e);
             }
         })
         .catch(error => console.error('Error creating user:', error));
     });
 
     listStatusesButton.addEventListener('click', function () {
-        fetch('controllers/StatutGetController.php')
+        fetch('controllers/AdminController.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ action: 'list_status' })
+        })
         .then(response => response.json())
         .then(data => {
             statusList.innerHTML = '';
             data.forEach(status => {
                 const statusItem = document.createElement('div');
-                statusItem.textContent = status.libelle;
+                statusItem.textContent = `${status.id_statut} - ${status.libelle}`;
                 statusList.appendChild(statusItem);
             });
         })

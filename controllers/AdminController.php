@@ -40,8 +40,8 @@ class AdminController extends AbstractController {
             case 'delete_user':
                 //$this->response = $this->service->deleteUser($this->form['id']);
                 break;
-            case 'list_statuses':
-                //$this->response = $this->service->listStatuses();
+            case 'list_status':
+                $this->listAllStatus();
                 break;
             case 'create_status':
                 //$this->response = $this->service->createStatus($this->form);
@@ -52,6 +52,7 @@ class AdminController extends AbstractController {
             default:
                 $this->response = ['success' => false, 'error' => 'Invalid action'];
         }
+        error_log('AdminController response: ' . print_r($this->response, true));
     }
 
     private function listUsers() {
@@ -63,9 +64,20 @@ class AdminController extends AbstractController {
         }
     }
 
+    private function listAllStatus() {
+        try {
+            $status = $this->service->listStatus();
+            $this->response = $status;
+        } catch (Exception $e) {
+            $this->response = ['success' => false, 'error' => 'Error fetching status: ' . $e->getMessage()];
+        }
+    }
+
     public function processResponse() {
         header('Content-Type: application/json');
-        echo json_encode($this->response);
+        $jsonResponse = json_encode($this->response);
+        error_log('AdminController JSON response: ' . $jsonResponse);
+        echo $jsonResponse;
     }
 }
 

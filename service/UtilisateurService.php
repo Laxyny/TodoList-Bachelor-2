@@ -36,8 +36,8 @@ class UtilisateurService extends AbstractService implements BaseService {
         return $this->utilisateurDao->login($utilisateur, $password);
     }
 
-    public function register($utilisateur, $password) {
-        return $this->utilisateurDao->register($utilisateur, $password);
+    public function register($utilisateur, $password, $role) {
+        return $this->utilisateurDao->register($utilisateur, $password, $role);
     }
 }
 ?>

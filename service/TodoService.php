@@ -31,8 +31,25 @@ class TodoService extends AbstractService implements BaseService {
         return $this->todoDao->fetchAllByUser($id);
     }
 
+    public function create($data) {
+        error_log('Create Todo data: ' . print_r($data, true));
+    
+        $title = $data['title'] ?? '';
+        $description = $data['description'] ?? '';
+        $due_date = $data['due_date'] ?? '';
+        $user_id = $data['user_id'] ?? '';
+        $status_id = 1; // Par défaut, le statut est créé
+        $priority_id = 1; // Par défaut, la priorité est normale
+    
+        if (empty($title) || empty($description) || empty($due_date) || empty($user_id)) {
+            return ['success' => false, 'error' => 'All fields are required'];
+        }
+    
+        return $this->todoDao->insert($title, $description, $due_date, $user_id, $status_id, $priority_id);
+    }
+
     public function insert($entity) {
-        return $this->todoDao->insert($entity);
+        //return $this->todoDao->insert($entity);
     }
 
     public function update($entity) {
