@@ -1,15 +1,17 @@
+-- SQLBook: Code
 -- Création de la table `utilisateurs`
 CREATE TABLE `utilisateurs` (
     `id_utilisateur` INT AUTO_INCREMENT PRIMARY KEY,
-    `email` VARCHAR(255) NOT NULL,
-    `mot_de_passe` VARCHAR(255) NOT NULL
+    `utilisateur` VARCHAR(255) NOT NULL,
+    `mot_de_passe` VARCHAR(255) NOT NULL,
+    `role` ENUM('admin', 'user') DEFAULT 'user'
 );
 
 -- Insertion des données dans la table `utilisateurs`
-INSERT INTO `utilisateurs` (`id_utilisateur`, `email`, `mot_de_passe`) 
+INSERT INTO `utilisateurs` (`id_utilisateur`, `utilisateur`, `mot_de_passe`, `role`) 
 VALUES 
-(1, 'kevin.gregoire@e-cdp.com', 'OpenIT'),
-(2, 'admin@admin.com', 'AdminToDo');
+(1, 'user', 'qwerty', 'user'),
+(2, 'admin', 'azerty', 'admin');
 
 -- Création de la table `statut`
 CREATE TABLE `statut` (
@@ -52,7 +54,6 @@ CREATE TABLE `todo` (
     FOREIGN KEY (`id_priorite`) REFERENCES `priorites`(`id_priorite`),
     FOREIGN KEY (`id_utilisateur`) REFERENCES `utilisateurs`(`id_utilisateur`)
 );
-
 -- Insertion des données dans la table `todo`
 INSERT INTO `todo` (`id_todo`, `titre`, `description`, `date_creation`, `date_echeance`, `id_statut`, `id_priorite`, `id_utilisateur`) 
 VALUES 

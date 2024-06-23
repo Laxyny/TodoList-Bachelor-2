@@ -26,32 +26,64 @@ class TodoPostController extends AbstractController {
     }
 
     public function processRequest() {
-        $title = $this->form['title'] ?? '';
-        $description = $this->form['description'] ?? '';
-        $dueDate = $this->form['dueDate'] ?? '';
-        $userId = $this->form['userId'] ?? '';
+        $action = $this->form['action'] ?? '';
 
-        if (empty($title) || empty($description) || empty($dueDate) || empty($userId)) {
-            $this->response = ['success' => false, 'error' => 'All fields are required'];
-            return;
-        }
-
-        $todo = new Todo(
-            null,
-            $title,
-            $description,
-            date('Y-m-d'), // date_creation
-            $dueDate,
-            1, // id_statut (par exemple, 1 pour "à faire")
-            1, // id_priorite (par exemple, 1 pour "normal")
-            $userId
-        );
-
-        try {
-            $this->service->insert($todo);
-            $this->response = ['success' => true];
-        } catch (Exception $e) {
-            $this->response = ['success' => false, 'error' => 'Error adding todo: ' . $e->getMessage()];
+        switch ($action) {
+            case 'add_todo':
+                $title = $this->form['title'] ?? '';
+                $description = $this->form['description'] ?? '';
+                $dueDate = $this->form['dueDate'] ?? '';
+                $userId = $this->form['userId'] ?? '';
+                if (empty($title) || empty($description) || empty($dueDate) || empty($userId)) {
+                    $this->response = ['success' => false, 'error' => 'All fields are required'];
+                    return;
+                }
+                $this->service->insert(new Todo(
+                    null,
+                    $title,
+                    $description,
+                    date('Y-m-d'),
+                    $dueDate,
+                    1, // default status id
+                    1, // default priority id
+                    $userId
+                ));
+                $this->response = ['success' => true];
+                break;
+            
+            case 'edit_status':
+                $todoId = $this->form['todoId'] ?? '';
+                $newStatus = $this->form['newStatus'] ?? '';
+                if (empty($todoId) || empty($newStatus)) {
+                    $this->response = ['success' => false, 'error' => 'Todo ID and new status are required'];
+                    return;
+                }
+                $this->service->editStatus($todoId, $newStatus);
+                $this->response = ['success' => true];
+                break;
+            
+            case 'delete_todo':
+                $todoId = $this->form['todoId'] ?? '';
+                if (empty($todoId)) {
+                    $this->response = ['success' => false, 'error' => 'Todo ID is required'];
+                    return;
+                }
+                $this->service->delete($todoId);
+                $this->response = ['success' => true];
+                break;
+            
+            case 'restore_todo':
+                $todoId = $this->form['todoId'] ?? '';
+                if (empty($todoId)) {
+                    $this->response = ['success' => false, 'error' => 'Todo ID is required'];
+                    return;
+                }
+                $this->service->restore($todoId);
+                $this->response = ['success' => true];
+                break;
+            
+            default:
+                $this->response = ['success' => false, 'error' => 'Invalid action'];
         }
     }
 

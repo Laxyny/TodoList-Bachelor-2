@@ -5,23 +5,23 @@
 
 	class PrioriteService extends AbstractService implements BaseService {
 
-		private $dao;
+		private $prioriteDao;
 
 		function __construct() {
 			// On n'utilise que les méthodes de l'interface
-			$this->dao = new PrioriteDao();
+			$this->prioriteDao = new PrioriteDao(DbSingleton::getInstance()->getConnection());
 		}
 
 		function fetchAll() {
-			$list = $this->dao->fetchAll();
-			return $list;
+			return $this->prioriteDao->fetchAll();
 		}
 
                 public function fetch($id) {
-                    return $this->dao->fetch($id);
+                    return $this->prioriteDao->fetch($id);
 		}
 
                 public function insert($entity) {
+					return $this->prioriteDao->insert($entity);
 		}
 
                 public function update($entity) {

@@ -13,7 +13,7 @@
 
 		protected function checkForm() {
 			// Je vais controller si j'ai un id, et je vais le stocker
-            if (! isset($this->form['id_priotite'])) {
+            if (! isset($this->form['id_priorite'])) {
                 error_log(__FUNCTION__. ' listing');
                 //Ici je n'ai pas d'id, donc c'est pour un listing
             } else {
@@ -34,20 +34,24 @@
                 protected function checkRights() {
 			error_log(__FUNCTION__);
 		}
-                protected function processRequest() {
-			if (isset($this->id)) {
-                $this->priorite = $this->service->fetch($this->id);
-            } else {
-                $this->priorites = $this->service->fetchAll();
-            }
-		}
-                protected function processResponse() {
-			if (isset($this->id)) {
-                echo json_encode($this->priorite);
-            } else {
-                echo json_encode($this->priorites);
-            }
-		}
 
-	}
-?>
+        public function processRequest() {
+            try {
+                $this->priorite = $this->service->fetchAll();
+                error_log('Priorites fetched: ' . print_r($this->priorite, true)); // Log the fetched priorites
+            } catch (Exception $e) {
+                echo json_encode(['error' => 'Error fetching priorites: ' . $e->getMessage()]);
+                exit();
+            }
+        }
+    
+        public function processResponse() {
+            echo json_encode($this->priorite);
+        }
+    }
+    
+    $form = $_GET; // Ou $_POST selon la méthode de votre formulaire
+    $controller = new PrioriteGetController($form);
+    $controller->processRequest();
+    $controller->processResponse();
+    ?>

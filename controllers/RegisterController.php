@@ -28,14 +28,14 @@ class RegisterController extends AbstractController {
     }
 
     public function processRequest() {
-        $email = $this->form['email'] ?? '';
+        $utilisateur = $this->form['utilisateur'] ?? '';
         $password = $this->form['password'] ?? '';
-        if (empty($email) || empty($password)) {
-            $this->response = ['success' => false, 'error' => 'Email and password are required'];
+        if (empty($utilisateur) || empty($password)) {
+            $this->response = ['success' => false, 'error' => 'Utilisateur and password are required'];
             return;
         }
 
-        if ($this->service->register($email, $password)) {
+        if ($this->service->register($utilisateur, $password)) {
             $this->response = ['success' => true];
         } else {
             $this->response = ['success' => false, 'error' => 'Registration failed'];

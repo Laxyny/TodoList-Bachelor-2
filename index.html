@@ -8,20 +8,20 @@
     <div id="todo-list"></div>
 
     <form id="loginForm">
-        <input type="email" id="loginEmail" placeholder="Email">
+        <input type="text" id="loginUtilisateur" placeholder="Utilisateur">
         <input type="password" id="loginPassword" placeholder="Password">
         <button type="submit">Login</button>
         <div id="loginError"></div>
     </form>
 
-    <button id="logoutButton" style="display: none;">Logout</button>
-
     <form id="registerForm">
-        <input type="email" id="registerEmail" placeholder="Email">
+        <input type="text" id="registerUtilisateur" placeholder="Utilisateur">
         <input type="password" id="registerPassword" placeholder="Password">
         <button type="submit">Register</button>
         <div id="registerError"></div>
     </form>
+
+    <button id="logoutButton" style="display: none;">Logout</button>
 
     <form id="todoForm" style="display: none;">
         <input type="text" id="todoTitle" placeholder="Title">
@@ -29,6 +29,41 @@
         <input type="date" id="todoDueDate" placeholder="Due Date">
         <button type="submit">Add Todo</button>
     </form>
+
+    <div id="adminPanel" style="display: none;">
+        <h2>Admin Panel</h2>
+        <div id="userManagement">
+            <h3>Manage Users</h3>
+            <button id="listUsersButton">List Users</button>
+            <div id="userList"></div>
+            <h4>Create User</h4>
+            <form id="createUserForm">
+                <input type="text" id="createUserUtilisateur" placeholder="Utilisateur">
+                <input type="password" id="createUserPassword" placeholder="Password">
+                <select id="createUserRole">
+                    <option value="user">User</option>
+                    <option value="admin">Admin</option>
+                </select>
+                <button type="submit">Create User</button>
+            </form>
+        </div>
+        <div id="statusManagement">
+            <h3>Manage Statuses</h3>
+            <button id="listStatusesButton">List Statuses</button>
+            <div id="statusList"></div>
+            <h4>Create Status</h4>
+            <form id="createStatusForm">
+                <input type="text" id="createStatusName" placeholder="Status Name">
+                <button type="submit">Create Status</button>
+            </form>
+        </div>
+        <div id="deletedTodos">
+            <h3>Deleted Todos</h3>
+            <div id="deletedTodoList">
+                <button id="restaurerDeletedTodosButton" type="submit">Restaurer</button>
+            </div>
+        </div>
+    </div>
 
     <script src="JS/script.js"></script>
 </body>

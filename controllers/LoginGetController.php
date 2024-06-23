@@ -28,21 +28,22 @@ class LoginGetController extends AbstractController {
     }
 
     public function processRequest() {
-        $email = $this->form['email'] ?? '';
+        $utilisateur = $this->form['utilisateur'] ?? '';
         $password = $this->form['password'] ?? '';
-        error_log("Email: $email, Password: $password");
-
-        if (empty($email) || empty($password)) {
-            $this->response = ['success' => false, 'error' => 'Email and password are required'];
+        error_log("Utilisateur: $utilisateur, Password: $password");
+    
+        if (empty($utilisateur) || empty($password)) {
+            $this->response = ['success' => false, 'error' => 'Utilisateur and password are required'];
             return;
         }
-
-        $user = $this->service->login($email, $password);
+    
+        $user = $this->service->login($utilisateur, $password);
         if ($user) {
             $_SESSION['user_id'] = $user->id_utilisateur;
-            $this->response = ['success' => true, 'userId' => $user->id_utilisateur];
+            $_SESSION['role'] = $user->role;
+            $this->response = ['success' => true, 'userId' => $user->id_utilisateur, 'role' => $user->role];
         } else {
-            $this->response = ['success' => false, 'error' => 'Invalid email or password'];
+            $this->response = ['success' => false, 'error' => 'Invalid utilisateur or password'];
         }
     }
 

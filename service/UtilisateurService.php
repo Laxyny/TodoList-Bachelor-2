@@ -31,13 +31,13 @@ class UtilisateurService extends AbstractService implements BaseService {
         // Implémentation si nécessaire
     }
 
-    public function login($email, $password) {
-        error_log("Attempting login for Email: $email");
-        return $this->utilisateurDao->login($email, $password);
+    public function login($utilisateur, $password) {
+        error_log("Attempting login for Utilisateur: $utilisateur");
+        return $this->utilisateurDao->login($utilisateur, $password);
     }
 
-    public function register($email, $password) {
-        return $this->utilisateurDao->register($email, $password);
+    public function register($utilisateur, $password) {
+        return $this->utilisateurDao->register($utilisateur, $password);
     }
 }
 ?>

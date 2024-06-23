@@ -15,7 +15,7 @@ class UtilisateurDao {
         $result = $stmt->get_result();
         $utilisateurs = [];
         while ($row = $result->fetch_assoc()) {
-            $utilisateurs[] = new Utilisateur($row['id_utilisateur'], $row['email'], $row['mot_de_passe']);
+            $utilisateurs[] = new Utilisateur($row['id_utilisateur'], $row['utilisateur'], $row['mot_de_passe'], $row['role']);
         }
         return $utilisateurs;
     }
@@ -26,27 +26,27 @@ class UtilisateurDao {
         $stmt->execute();
         $result = $stmt->get_result();
         if ($row = $result->fetch_assoc()) {
-            return new Utilisateur($row['id_utilisateur'], $row['email'], $row['mot_de_passe']);
+            return new Utilisateur($row['id_utilisateur'], $row['utilisateur'], $row['mot_de_passe'], $row['role']);
         }
         return null;
     }
 
-    public function login($email, $password) {
-        $stmt = $this->conn->prepare("SELECT * FROM utilisateurs WHERE email = ?");
-        $stmt->bind_param("s", $email);
+    public function login($utilisateur, $password) {
+        $stmt = $this->conn->prepare("SELECT * FROM utilisateurs WHERE utilisateur = ?");
+        $stmt->bind_param("s", $utilisateur);
         $stmt->execute();
         $result = $stmt->get_result();
         $user = $result->fetch_assoc();
         error_log("Login query result: " . print_r($user, true));
         if ($user && $user['mot_de_passe'] === $password) {
-            return new Utilisateur($user['id_utilisateur'], $user['email'], $user['mot_de_passe']);
+            return new Utilisateur($user['id_utilisateur'], $user['utilisateur'], $user['mot_de_passe'], $user['role']);
         }
         return null;
     }
     
-    public function register($email, $password) {
-        $stmt = $this->conn->prepare("INSERT INTO utilisateurs (email, mot_de_passe) VALUES (?, ?)");
-        $stmt->bind_param("ss", $email, $password);
+    public function register($utilisateur, $password) {
+        $stmt = $this->conn->prepare("INSERT INTO utilisateurs (utilisateur, mot_de_passe) VALUES (?, ?)");
+        $stmt->bind_param("ss", $utilisateur, $password);
         return $stmt->execute();
     }
 }

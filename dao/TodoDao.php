@@ -66,6 +66,54 @@ class TodoDao {
         return $todos;
     }
 
+    public function fetchAllByUser($userId) {
+        $stmt = $this->conn->prepare("
+            SELECT todo.*, statut.libelle as libelle_statut, priorites.libelle as libelle_priorite 
+            FROM todo 
+            JOIN statut ON todo.id_statut = statut.id_statut 
+            JOIN priorites ON todo.id_priorite = priorites.id_priorite 
+            WHERE id_utilisateur = ?
+        ");
+        if (!$stmt) {
+            error_log('Error preparing statement: ' . $this->conn->error);
+            return [];
+        }
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $todos = [];
+        while ($row = $result->fetch_assoc()) {
+            $todos[] = $row;
+        }
+        return $todos;
+    }
+    
+
+    public function fetchAllWithDeleted($userId) {
+        $stmt = $this->conn->prepare("SELECT id_todo, titre, description, date_creation, date_echeance, id_statut, id_priorite, id_utilisateur FROM todo WHERE id_utilisateur = ?");
+        if (!$stmt) {
+            error_log('Error preparing statement: ' . $this->conn->error);
+            return [];
+        }
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $todos = [];
+        while ($row = $result->fetch_assoc()) {
+            $todos[] = new Todo(
+                $row['id_todo'],
+                $row['titre'],
+                $row['description'],
+                $row['date_creation'],
+                $row['date_echeance'],
+                $row['id_statut'],
+                $row['id_priorite'],
+                $row['id_utilisateur']
+            );
+        }
+        return $todos;
+    }
+
     public function insert($todo) {
         $stmt = $this->conn->prepare("INSERT INTO todo (titre, description, date_creation, date_echeance, id_statut, id_priorite, id_utilisateur) VALUES (?, ?, ?, ?, ?, ?, ?)");
         if (!$stmt) {
@@ -82,6 +130,36 @@ class TodoDao {
             $todo->id_priorite,
             $todo->id_utilisateur
         );
+        return $stmt->execute();
+    }
+
+    public function editStatus($id, $newStatus) {
+        $stmt = $this->conn->prepare("UPDATE todo SET id_statut = ? WHERE id_todo = ?");
+        if (!$stmt) {
+            error_log('Error preparing statement: ' . $this->conn->error);
+            return ['success' => false, 'error' => $this->conn->error];
+        }
+        $stmt->bind_param("ii", $newStatus, $id);
+        return $stmt->execute();
+    }
+
+    public function delete($id) {
+        $stmt = $this->conn->prepare("UPDATE todo SET id_statut = 4 WHERE id_todo = ?");
+        if (!$stmt) {
+            error_log('Error preparing statement: ' . $this->conn->error);
+            return ['success' => false, 'error' => $this->conn->error];
+        }
+        $stmt->bind_param("i", $id);
+        return $stmt->execute();
+    }
+
+    public function restore($id) {
+        $stmt = $this->conn->prepare("UPDATE todo SET id_statut = 1 WHERE id_todo = ?");
+        if (!$stmt) {
+            error_log('Error preparing statement: ' . $this->conn->error);
+            return ['success' => false, 'error' => $this->conn->error];
+        }
+        $stmt->bind_param("i", $id);
         return $stmt->execute();
     }
 }

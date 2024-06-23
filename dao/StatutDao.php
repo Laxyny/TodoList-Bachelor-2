@@ -39,15 +39,37 @@ class StatutDao extends AbstractDao implements BaseDao
 	{
 	}
 
-	public function insert($entity)
-	{
+	public function create($name) {
+        $stmt = $this->conn->prepare("INSERT INTO statuts (name) VALUES (?)");
+        if (!$stmt) {
+            error_log('Error preparing statement: ' . $this->conn->error);
+            return ['success' => false, 'error' => $this->conn->error];
+        }
+        $stmt->bind_param("s", $name);
+        return $stmt->execute();
+    }
+
+	public function insert($entity) {
+		$stmt = $this->conn->prepare("INSERT INTO statut (libelle) VALUES (?)");
+        if (!$stmt) {
+            error_log('Error preparing statement: ' . $this->conn->error);
+            return false;
+        }
+        $stmt->bind_param("s", $entity);
+        return $stmt->execute();
 	}
 
 	public function update($entity)
 	{
 	}
 
-	public function delete($id)
-	{
+	public function delete($id) {
+		$stmt = $this->conn->prepare("DELETE FROM statuts WHERE id_statut = ?");
+        if (!$stmt) {
+            error_log('Error preparing statement: ' . $this->conn->error);
+            return ['success' => false, 'error' => $this->conn->error];
+        }
+        $stmt->bind_param("i", $id);
+        return $stmt->execute();
 	}
 }

@@ -28,12 +28,13 @@ class TodoGetController extends AbstractController {
     public function processRequest() {
         try {
             $id = $this->form['userId'] ?? null;
-            if ($id === null) {
-                echo json_encode(['error' => 'User ID is required']);
-                exit();
-            }
+            $includeDeleted = $this->form['includeDeleted'] ?? false;
 
-            $this->todos = $this->service->fetch($id);
+            if ($includeDeleted && $_SESSION['user_role'] === 'admin') {
+                $this->todos = $this->service->fetchAllWithDeleted($id);
+            } else {
+                $this->todos = $this->service->fetchAllByUser($id);
+            }
             error_log('Todos fetched: ' . print_r($this->todos, true)); // Log the fetched todos
         } catch (Exception $e) {
             echo json_encode(['error' => 'Error fetching todos: ' . $e->getMessage()]);

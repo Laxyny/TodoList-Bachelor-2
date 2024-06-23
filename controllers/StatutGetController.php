@@ -25,8 +25,14 @@ class StatutGetController extends AbstractController {
         error_log(__FUNCTION__);
     }
 
-    public function processRequest() { // Changer en public
-        $this->statuts = $this->service->fetchAll();
+    public function processRequest() {
+        try {
+            $this->statuts = $this->service->fetchAll();
+            error_log('Statuts fetched: ' . print_r($this->statuts, true)); // Log the fetched statuts
+        } catch (Exception $e) {
+            echo json_encode(['error' => 'Error fetching statuts: ' . $e->getMessage()]);
+            exit();
+        }
     }
 
     public function processResponse() { // Changer en public

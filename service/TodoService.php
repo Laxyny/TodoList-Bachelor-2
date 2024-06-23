@@ -19,6 +19,14 @@ class TodoService extends AbstractService implements BaseService {
         return $this->todoDao->fetch($id);
     }
 
+    public function fetchAllWithDeleted($id) {
+        return $this->todoDao->fetchAllWithDeleted($id);
+    }
+
+    public function fetchAllByUser($id) {
+        return $this->todoDao->fetchAllByUser($id);
+    }
+
     public function insert($entity) {
         return $this->todoDao->insert($entity);
     }
@@ -28,7 +36,15 @@ class TodoService extends AbstractService implements BaseService {
     }
 
     public function delete($id) {
-        // Implémentation si nécessaire
+        return $this->todoDao->delete($id);
+    }
+
+    public function editStatus($id, $newStatus) {
+        return $this->todoDao->editStatus($id, $newStatus);
+    }
+
+    public function restore($id) {
+        return $this->todoDao->restore($id);
     }
 }
 ?>

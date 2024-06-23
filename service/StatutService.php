@@ -24,7 +24,7 @@ class StatutService extends AbstractService implements BaseService
 
 	public function insert($entity)
 	{
-		// Implémentation si nécessaire
+		return $this->statutDao->insert($entity);
 	}
 
 	public function update($entity)
