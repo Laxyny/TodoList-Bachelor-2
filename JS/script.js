@@ -1,15 +1,18 @@
 document.addEventListener("DOMContentLoaded", function () {
     const todoList = document.getElementById('todo-list');
+
     const loginForm = document.getElementById('loginForm');
     const loginError = document.getElementById('loginError');
+
     const registerForm = document.getElementById('registerForm');
     const registerError = document.getElementById('registerError');
+
     const logoutButton = document.getElementById('logoutButton');
+
     const todoForm = document.getElementById('todoForm');
     const todoTitle = document.getElementById('todoTitle');
     const todoDescription = document.getElementById('todoDescription');
     const todoDueDate = document.getElementById('todoDueDate');
-    const userId = document.getElementById('userId').value;
     const todoStatus = document.getElementById('todoStatus');
     const todoPriority = document.getElementById('todoPriority');
 
@@ -129,6 +132,10 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
+    function getUserId() {
+        return sessionStorage.getItem('userId');
+    }
+
     logoutButton.addEventListener('click', function () {
         localStorage.removeItem('userId');
         localStorage.removeItem('userRole');
@@ -138,14 +145,21 @@ document.addEventListener("DOMContentLoaded", function () {
     todoForm.addEventListener('submit', function (event) {
         event.preventDefault();
 
-        const title = todoTitle.value;
+        const titre = todoTitle.value;
         const description = todoDescription.value;
-        const dueDate = todoDueDate.value;
-        const statusId = todoStatus.value;
-        const priorityId = todoPriority.value;
-        const userId = localStorage.getItem('userId');
+        const date_echeance = todoDueDate.value;
+        const id_statut = todoStatus.value;
+        const id_priorite = todoPriority.value;
+        const id_utilisateur = localStorage.getItem('userId');
 
-        const requestData = { action: 'create_todo', title, description, dueDate, statusId, priorityId, userId };
+        const date_creation = new Date().toISOString().split('T')[0];
+
+        if (!titre || !description || !date_echeance || !id_statut || !id_priorite || !id_utilisateur) {
+            console.error('Tout les champs doivent êtres remplis');
+            return;
+        }
+
+        const requestData = { action: 'create_todo', titre, description, date_creation, date_echeance, id_statut, id_priorite, id_utilisateur };
         console.log('Sending todo data:', requestData);
 
         fetch('controllers/TodoPostController.php', {

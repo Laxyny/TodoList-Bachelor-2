@@ -135,13 +135,13 @@ class TodoDao {
         return $todos;
     }
 
-    public function insert($title, $description, $due_date, $user_id, $status_id, $priority_id) {
-        $stmt = $this->conn->prepare("INSERT INTO todo (titre, description, date_echeance, id_utilisateur, id_statut, id_priorite) VALUES (?, ?, ?, ?, ?, ?)");
+    public function insert($titre, $description, $date_creation, $date_echeance, $id_statut, $id_priorite, $id_utilisateur) {
+        $stmt = $this->conn->prepare("INSERT INTO todo (titre, description, date_creation, date_echeance, id_statut, id_priorite, id_utilisateur) VALUES (?, ?, ?, ?, ?, ?, ?)");
         if (!$stmt) {
             error_log('Error preparing statement: ' . $this->conn->error);
             return ['success' => false, 'error' => $this->conn->error];
         }
-        $stmt->bind_param("sssiii", $title, $description, $due_date, $user_id, $status_id, $priority_id);
+        $stmt->bind_param("ssssiii", $titre, $description, $date_creation, $date_echeance, $id_statut, $id_priorite, $id_utilisateur);
         $result = $stmt->execute();
         if (!$result) {
             error_log('Error executing statement: ' . $stmt->error);
