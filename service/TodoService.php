@@ -23,6 +23,10 @@ class TodoService extends AbstractService implements BaseService {
         return $this->todoDao->fetchAllWithDeleted($id);
     }
 
+    public function fetchDeletedTodos() {
+        return $this->todoDao->fetchDeletedTodos();
+    }
+
     public function fetchAllByUser($id) {
         return $this->todoDao->fetchAllByUser($id);
     }

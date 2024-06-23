@@ -3,13 +3,16 @@ define('ROOT', dirname(__DIR__));
 
 require(ROOT . '/utils/AbstractController.php');
 require(ROOT . '/service/AdminService.php');
+require(ROOT . '/service/UtilisateurService.php');
 
 class AdminController extends AbstractController {
+    private $utilisateurService;
     private $service;
     private $response;
 
     public function __construct($form) {
         parent::__construct($form, 'AdminController');
+        $this->utilisateurService = new UtilisateurService();
         $this->service = new AdminService();
     }
 
@@ -29,25 +32,34 @@ class AdminController extends AbstractController {
         $action = $this->form['action'] ?? '';
         switch ($action) {
             case 'list_users':
-                $this->response = $this->service->listUsers();
+                $this->listUsers();
                 break;
             case 'create_user':
                 $this->response = $this->service->createUser($this->form);
                 break;
             case 'delete_user':
-                $this->response = $this->service->deleteUser($this->form['id']);
+                //$this->response = $this->service->deleteUser($this->form['id']);
                 break;
             case 'list_statuses':
-                $this->response = $this->service->listStatuses();
+                //$this->response = $this->service->listStatuses();
                 break;
             case 'create_status':
-                $this->response = $this->service->createStatus($this->form);
+                //$this->response = $this->service->createStatus($this->form);
                 break;
             case 'delete_status':
-                $this->response = $this->service->deleteStatus($this->form['id']);
+                //$this->response = $this->service->deleteStatus($this->form['id']);
                 break;
             default:
                 $this->response = ['success' => false, 'error' => 'Invalid action'];
+        }
+    }
+
+    private function listUsers() {
+        try {
+            $users = $this->service->fetchAll();
+            $this->response = $users;
+        } catch (Exception $e) {
+            $this->response = ['success' => false, 'error' => 'Error fetching users: ' . $e->getMessage()];
         }
     }
 
@@ -58,11 +70,19 @@ class AdminController extends AbstractController {
 }
 
 try {
-    $controller = new AdminController($_POST);
-    $controller->processRequest();
-    $controller->processResponse();
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $form = json_decode(file_get_contents('php://input'), true);
+        error_log("Form data: " . print_r($form, true));
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            throw new Exception('Invalid JSON input: ' . json_last_error_msg());
+        }
+        $controller = new AdminController($form);
+        $controller->processRequest();
+        $controller->processResponse();
+    } else {
+        echo json_encode(['success' => false, 'error' => 'Invalid request method']);
+    }
 } catch (Exception $e) {
-    header('Content-Type: application/json');
     echo json_encode(['success' => false, 'error' => 'Internal server error: ' . $e->getMessage()]);
 }
 ?>

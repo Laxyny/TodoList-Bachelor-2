@@ -25,8 +25,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const createStatusForm = document.getElementById('createStatusForm');
     const createStatusName = document.getElementById('createStatusName');
 
+    const listDeletedTodosButton = document.getElementById('listDeletedTodosButton');
     const deletedTodoList = document.getElementById('deletedTodoList');
-    const restaurerDeletedTodosButton = document.getElementById('restaurerDeletedTodosButton');
 
     if (!todoList) {
         console.error('Element with ID "todo-list" not found.');
@@ -187,7 +187,12 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .then(response => response.json())
         .then(data => {
+            console.log('Data received from API for users:', data); // Log the received data
             userList.innerHTML = '';
+            if (!Array.isArray(data)) {
+                console.error('Error: Expected an array but received:', data);
+                return;
+            }
             data.forEach(user => {
                 const userItem = document.createElement('div');
                 userItem.textContent = `${user.utilisateur} (${user.role})`;
@@ -196,6 +201,7 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .catch(error => console.error('Error listing users:', error));
     });
+    
 
     createUserForm.addEventListener('submit', function (event) {
         event.preventDefault();
@@ -263,6 +269,26 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         })
         .catch(error => console.error('Error creating status:', error));
+    });
+
+    listDeletedTodosButton.addEventListener('click', function () {
+        fetch('controllers/TodoGetController.php?action=fetch_deleted')
+        .then(response => response.json())
+        .then(data => {
+            deletedTodoList.innerHTML = '';
+            data.forEach(item => {
+                const listItem = document.createElement('div');
+                listItem.innerHTML = `<strong>${item.titre}</strong>: ${item.description} (Créé le ${item.date_creation}, Échéance: ${item.date_echeance})<br>Status: ${item.libelle_statut}, Priority: ${item.libelle_priorite}`;
+                const restoreButton = document.createElement('button');
+                restoreButton.textContent = 'Restore';
+                restoreButton.addEventListener('click', function () {
+                    restoreTodoAdmin(item.id_todo);
+                });
+                listItem.appendChild(restoreButton);
+                deletedTodoList.appendChild(listItem);
+            });
+        })
+        .catch(error => console.error('Error listing deleted todos:', error));
     });
 
     function fetchTodos(userId) {
@@ -356,8 +382,8 @@ document.addEventListener("DOMContentLoaded", function () {
         .catch(error => console.error('Error deleting todo:', error));
     }
 
-    function restoreTodo(todoId) {
-        const requestData = { action: 'restore_todo', todoId };
+    function restoreTodoAdmin(todoId) {
+        const requestData = { action: 'restore_todo_admin', todoId };
         fetch('controllers/TodoPostController.php', {
             method: 'POST',
             headers: {
@@ -368,8 +394,7 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                const userId = localStorage.getItem('userId');
-                fetchTodos(userId);
+                listDeletedTodosButton.click();
             } else {
                 console.error('Error restoring todo:', data.error);
             }

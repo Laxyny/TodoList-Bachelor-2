@@ -81,6 +81,20 @@ class TodoPostController extends AbstractController {
                 $this->service->restore($todoId);
                 $this->response = ['success' => true];
                 break;
+
+                case 'restore_todo_admin':
+                    $todoId = $this->form['todoId'] ?? null;
+                    if ($todoId) {
+                        $result = $this->service->restore($todoId, 2); // 2 correspond à "En cours"
+                        if ($result) {
+                            $this->response = ['success' => true];
+                        } else {
+                            $this->response = ['success' => false, 'error' => 'Failed to restore todo'];
+                        }
+                    } else {
+                        $this->response = ['success' => false, 'error' => 'Todo ID is required'];
+                    }
+                    break;
             
             default:
                 $this->response = ['success' => false, 'error' => 'Invalid action'];

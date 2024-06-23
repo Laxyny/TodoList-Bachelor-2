@@ -15,7 +15,7 @@ class AdminService extends AbstractService implements BaseService {
     }
 
     public function fetchAll() {
-        // Implémentation si nécessaire
+        return $this->utilisateurDao->fetchAll();
     }
 
     public function fetch($id) {
@@ -32,10 +32,6 @@ class AdminService extends AbstractService implements BaseService {
 
     public function delete($id) {
         // Implémentation si nécessaire   
-    }
-
-    public function listUsers() {
-        return $this->utilisateurDao->fetchAll();
     }
 
     public function createUser($data) {

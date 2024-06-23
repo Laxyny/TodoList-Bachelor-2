@@ -26,18 +26,27 @@ class TodoGetController extends AbstractController {
     }
 
     public function processRequest() {
-        try {
-            $id = $this->form['userId'] ?? null;
-            $includeDeleted = $this->form['includeDeleted'] ?? false;
-
-            if ($includeDeleted && $_SESSION['user_role'] === 'admin') {
-                $this->todos = $this->service->fetchAllWithDeleted($id);
-            } else {
-                $this->todos = $this->service->fetchAllByUser($id);
+        $action = $_GET['action'] ?? '';
+        $userId = $_GET['userId'] ?? null;
+    
+        if ($action === 'fetch_deleted') {
+            try {
+                $this->todos = $this->service->fetchDeletedTodos();
+                error_log('Deleted todos fetched: ' . print_r($this->todos, true));
+            } catch (Exception $e) {
+                echo json_encode(['error' => 'Error fetching deleted todos: ' . $e->getMessage()]);
+                exit();
             }
-            error_log('Todos fetched: ' . print_r($this->todos, true)); // Log the fetched todos
-        } catch (Exception $e) {
-            echo json_encode(['error' => 'Error fetching todos: ' . $e->getMessage()]);
+        } else if ($userId) {
+            try {
+                $this->todos = $this->service->fetchAllByUser($userId);
+                error_log('Todos fetched: ' . print_r($this->todos, true));
+            } catch (Exception $e) {
+                echo json_encode(['error' => 'Error fetching todos: ' . $e->getMessage()]);
+                exit();
+            }
+        } else {
+            echo json_encode(['error' => 'Invalid request']);
             exit();
         }
     }

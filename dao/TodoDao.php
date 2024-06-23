@@ -114,6 +114,27 @@ class TodoDao {
         return $todos;
     }
 
+    public function fetchDeletedTodos() {
+        $stmt = $this->conn->prepare("
+            SELECT todo.*, statut.libelle as libelle_statut, priorites.libelle as libelle_priorite 
+            FROM todo 
+            JOIN statut ON todo.id_statut = statut.id_statut 
+            JOIN priorites ON todo.id_priorite = priorites.id_priorite 
+            WHERE todo.id_statut = 4
+        ");
+        if (!$stmt) {
+            error_log('Error preparing statement: ' . $this->conn->error);
+            return [];
+        }
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $todos = [];
+        while ($row = $result->fetch_assoc()) {
+            $todos[] = $row;
+        }
+        return $todos;
+    }
+
     public function insert($todo) {
         $stmt = $this->conn->prepare("INSERT INTO todo (titre, description, date_creation, date_echeance, id_statut, id_priorite, id_utilisateur) VALUES (?, ?, ?, ?, ?, ?, ?)");
         if (!$stmt) {
@@ -154,7 +175,7 @@ class TodoDao {
     }
 
     public function restore($id) {
-        $stmt = $this->conn->prepare("UPDATE todo SET id_statut = 1 WHERE id_todo = ?");
+        $stmt = $this->conn->prepare("UPDATE todo SET id_statut = 2 WHERE id_todo = ?");
         if (!$stmt) {
             error_log('Error preparing statement: ' . $this->conn->error);
             return ['success' => false, 'error' => $this->conn->error];
