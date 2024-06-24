@@ -173,7 +173,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const date_creation = new Date().toISOString().split('T')[0];
 
         if (!titre || !description || !date_echeance || !id_statut || !id_priorite || !id_utilisateur) {
-            console.error('Tout les champs doivent êtres remplis');
+            console.error('Tous les champs doivent être remplis');
             return;
         }
 
@@ -195,6 +195,7 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .then(data => {
             if (data.success) {
+                const userId = localStorage.getItem('userId');
                 fetchTodos(userId);
                 todoTitle.value = '';
                 todoDescription.value = '';
@@ -475,6 +476,7 @@ document.addEventListener("DOMContentLoaded", function () {
         todoEditCategorie.value = currentCategorie;
 
         todoEditForm.style.display = 'block';
+        todoForm.style.display = 'none';
 
         todoEditForm.addEventListener('submit', function (event) {
             event.preventDefault();
@@ -501,6 +503,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     const userId = localStorage.getItem('userId');
                     fetchTodos(userId);
                     todoEditForm.style.display = 'none';
+                    todoForm.style.display = 'block';
                 } else {
                     console.error('Error editing todo:', data.error);
                 }
@@ -510,6 +513,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         cancelEditButton.addEventListener('click', function () {
             todoEditForm.style.display = 'none';
+            todoForm.style.display = 'block';
         });
     }
 
@@ -517,7 +521,7 @@ document.addEventListener("DOMContentLoaded", function () {
         fetch('controllers/CategorieGetController.php')
         .then(response => response.json())
         .then(data => {
-            todoEditCategorie.innerHTML = ''; // Clear previous options
+            todoEditCategorie.innerHTML = '';
             data.forEach(item => {
                 const option = document.createElement('option');
                 option.value = item.id_categorie;
