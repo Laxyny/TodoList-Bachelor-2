@@ -1,57 +1,162 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const todoList = document.getElementById('todo-list');
+    // Création dynamique des éléments HTML
+    const body = document.body;
 
-    const loginForm = document.getElementById('loginForm');
+    const todoList = document.createElement('div');
+    todoList.id = 'todo-list';
+    body.appendChild(todoList);
+
+    const loginForm = document.createElement('form');
+    loginForm.id = 'loginForm';
+    loginForm.innerHTML = `
+        <input type="text" id="loginUtilisateur" placeholder="Utilisateur">
+        <input type="password" id="loginPassword" placeholder="Password">
+        <button type="submit">Login</button>
+        <div id="loginError"></div>
+    `;
+    body.appendChild(loginForm);
+
+    const registerForm = document.createElement('form');
+    registerForm.id = 'registerForm';
+    registerForm.innerHTML = `
+        <input type="text" id="registerUtilisateur" placeholder="Utilisateur">
+        <input type="password" id="registerPassword" placeholder="Password">
+        <button type="submit">Register</button>
+        <div id="registerError"></div>
+    `;
+    body.appendChild(registerForm);
+
+    const logoutButton = document.createElement('button');
+    logoutButton.id = 'logoutButton';
+    logoutButton.style.display = 'none';
+    logoutButton.textContent = 'Logout';
+    body.appendChild(logoutButton);
+
+    const todoForm = document.createElement('form');
+    todoForm.id = 'todoForm';
+    todoForm.style.display = 'none';
+    todoForm.innerHTML = `
+        <input type="text" id="todoTitle" placeholder="Title">
+        <input type="text" id="todoDescription" placeholder="Description">
+        <input type="date" id="todoDueDate" placeholder="Due Date">
+        <select id="todoStatus">
+            <option value="1">Créé</option>
+            <option value="2">En cours</option>
+            <option value="3">Effectué</option>
+        </select>
+        <select id="todoPriority">
+            <option value="1">Basse</option>
+            <option value="2">Normale</option>
+            <option value="3">Haute</option>
+        </select>
+        <select id="todoCategorie"></select>
+        <button type="submit">Add Todo</button>
+    `;
+    body.appendChild(todoForm);
+
+    const todoEditForm = document.createElement('form');
+    todoEditForm.id = 'todoEditForm';
+    todoEditForm.style.display = 'none';
+    todoEditForm.innerHTML = `
+        <input type="text" id="todoEditTitle" placeholder="Title">
+        <input type="text" id="todoEditDescription" placeholder="Description">
+        <input type="date" id="todoEditDueDate" placeholder="Due Date">
+        <select id="todoEditStatus">
+            <option value="1">Créé</option>
+            <option value="2">En cours</option>
+            <option value="3">Effectué</option>
+        </select>
+        <select id="todoEditPriority">
+            <option value="1">Basse</option>
+            <option value="2">Normale</option>
+            <option value="3">Haute</option>
+        </select>
+        <select id="todoEditCategorie"></select>
+        <button type="submit">Save Changes</button>
+        <button type="button" id="cancelEditButton">Cancel</button>
+    `;
+    body.appendChild(todoEditForm);
+
+    const adminPanel = document.createElement('div');
+    adminPanel.id = 'adminPanel';
+    adminPanel.style.display = 'none';
+    adminPanel.innerHTML = `
+        <h2>Admin Panel</h2>
+        <div id="userManagement">
+            <h3>Manage Users</h3>
+            <button id="listUsersButton">List Users</button>
+            <div id="userList"></div>
+            <h4>Create User</h4>
+            <form id="createUserForm">
+                <input type="text" id="createUserUtilisateur" placeholder="Utilisateur" required>
+                <input type="password" id="createUserPassword" placeholder="Password" required>
+                <select id="createUserRole">
+                    <option value="user">User</option>
+                    <option value="admin">Admin</option>
+                </select>
+                <button type="submit">Create User</button>
+            </form>
+        </div>
+        <div id="statusManagement">
+            <h3>Manage Statuses</h3>
+            <button id="listStatusesButton">List Statuses</button>
+            <div id="statusList"></div>
+            <h4>Create Status</h4>
+            <form id="createStatusForm">
+                <input type="text" id="createStatusName" placeholder="Status Name">
+                <button type="submit">Create Status</button>
+            </form>
+        </div>
+        <div id="categoriesManagement">
+            <h3>Manage Categories</h3>
+            <button id="listCategoriesButton">List Categories</button>
+            <div id="categoriesList"></div>
+            <h4>Create Categorie</h4>
+            <form id="createCategoriesForm">
+                <input type="text" id="createCategorieName" placeholder="Categorie Name">
+                <button type="submit">Create Categorie</button>
+            </form>
+        </div>
+        <div>
+            <h3>Manage Deleted Todos</h3>
+            <button id="listDeletedTodosButton">List Deleted Todos</button>
+            <div id="deletedTodoList"></div>
+        </div>
+    `;
+    body.appendChild(adminPanel);
+
+    // Références aux éléments dynamiques
     const loginError = document.getElementById('loginError');
-
-    const registerForm = document.getElementById('registerForm');
     const registerError = document.getElementById('registerError');
-
-    const logoutButton = document.getElementById('logoutButton');
-
-    const todoForm = document.getElementById('todoForm');
     const todoTitle = document.getElementById('todoTitle');
     const todoDescription = document.getElementById('todoDescription');
     const todoDueDate = document.getElementById('todoDueDate');
     const todoStatus = document.getElementById('todoStatus');
     const todoPriority = document.getElementById('todoPriority');
     const todoCategorie = document.getElementById('todoCategorie');
-
-    const todoEditForm = document.getElementById('todoEditForm');
     const todoEditTitle = document.getElementById('todoEditTitle');
     const todoEditDescription = document.getElementById('todoEditDescription');
     const todoEditDueDate = document.getElementById('todoEditDueDate');
     const todoEditStatus = document.getElementById('todoEditStatus');
     const todoEditPriority = document.getElementById('todoEditPriority');
     const todoEditCategorie = document.getElementById('todoEditCategorie');
-    const todoModificationList = document.getElementById('todoModificationList');
-    const cancelEditButton = document.getElementById('cancelEditButton');
-
-    const adminPanel = document.getElementById('adminPanel');
     const listUsersButton = document.getElementById('listUsersButton');
     const userList = document.getElementById('userList');
     const createUserForm = document.getElementById('createUserForm');
     const createUserUtilisateur = document.getElementById('createUserUtilisateur');
     const createUserPassword = document.getElementById('createUserPassword');
     const createUserRole = document.getElementById('createUserRole');
-
     const listStatusesButton = document.getElementById('listStatusesButton');
     const statusList = document.getElementById('statusList');
     const createStatusForm = document.getElementById('createStatusForm');
     const createStatusName = document.getElementById('createStatusName');
-
     const listCategoriesButton = document.getElementById('listCategoriesButton');
     const categoriesList = document.getElementById('categoriesList');
     const createCategoriesForm = document.getElementById('createCategoriesForm');
     const createCategorieName = document.getElementById('createCategorieName');
-
     const listDeletedTodosButton = document.getElementById('listDeletedTodosButton');
     const deletedTodoList = document.getElementById('deletedTodoList');
-
-    if (!todoList) {
-        console.error('Element with ID "todo-list" not found.');
-        return;
-    }
+    const cancelEditButton = document.getElementById('cancelEditButton');
 
     function showLoginForm() {
         loginForm.style.display = 'block';
@@ -158,7 +263,7 @@ document.addEventListener("DOMContentLoaded", function () {
         showLoginForm();
     });
 
-    //Créer un todo
+    // Créer un todo
     todoForm.addEventListener('submit', function (event) {
         event.preventDefault();
 
@@ -212,7 +317,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    //Afficher les utilisateurs (ADMIN)
+    // Afficher les utilisateurs (ADMIN)
     listUsersButton.addEventListener('click', function () {
         fetch('controllers/AdminController.php', {
             method: 'POST',
@@ -244,7 +349,6 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .catch(error => console.error('Error listing users:', error));
     });
-    
 
     createUserForm.addEventListener('submit', function (event) {
         event.preventDefault();
@@ -379,17 +483,22 @@ document.addEventListener("DOMContentLoaded", function () {
         .catch(error => console.error('Error creating categories:', error));
     });
 
-//Affiche les differentes catégorties lors de la création d'un todo (todoCategorie)
-    fetch('controllers/CategorieGetController.php')
-    .then(response => response.json())
-    .then(data => {
-        data.forEach(item => {
-            const option = document.createElement('option');
-            option.value = item.id_categorie;
-            option.textContent = item.libelle;
-            todoCategorie.appendChild(option);
+    // Affiche les différentes catégories lors de la création d'un todo (todoCategorie)
+    function populateCategories() {
+        fetch('controllers/CategorieGetController.php')
+        .then(response => response.json())
+        .then(data => {
+            todoCategorie.innerHTML = ''; // Clear previous options
+            todoEditCategorie.innerHTML = ''; // Clear previous options
+            data.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.id_categorie;
+                option.textContent = item.libelle;
+                todoCategorie.appendChild(option.cloneNode(true)); // Append to todoCategorie
+                todoEditCategorie.appendChild(option); // Append to todoEditCategorie
+            });
         });
-    })
+    }
 
     listDeletedTodosButton.addEventListener('click', function () {
         fetch('controllers/TodoGetController.php?action=fetch_deleted')
@@ -410,9 +519,6 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .catch(error => console.error('Error listing deleted todos:', error));
     });
-
-
-
 
     function fetchTodos(userId) {
         fetch(`controllers/TodoGetController.php?userId=${userId}`)
@@ -478,7 +584,7 @@ document.addEventListener("DOMContentLoaded", function () {
         todoEditForm.style.display = 'block';
         todoForm.style.display = 'none';
 
-        todoEditForm.addEventListener('submit', function (event) {
+        todoEditForm.onsubmit = function (event) {
             event.preventDefault();
 
             const newTitle = todoEditTitle.value;
@@ -509,26 +615,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             })
             .catch(error => console.error('Error editing todo:', error));
-        });
+        };
 
-        cancelEditButton.addEventListener('click', function () {
+        cancelEditButton.onclick = function () {
             todoEditForm.style.display = 'none';
             todoForm.style.display = 'block';
-        });
-    }
-
-    function RecupCategories() {
-        fetch('controllers/CategorieGetController.php')
-        .then(response => response.json())
-        .then(data => {
-            todoEditCategorie.innerHTML = '';
-            data.forEach(item => {
-                const option = document.createElement('option');
-                option.value = item.id_categorie;
-                option.textContent = item.libelle;
-                todoEditCategorie.appendChild(option);
-            });
-        });
+        };
     }
 
     function deleteTodo(todoId) {
@@ -565,6 +657,8 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(data => {
             if (data.success) {
                 listDeletedTodosButton.click();
+                const userId = localStorage.getItem('userId');
+                fetchTodos(userId);
             } else {
                 console.error('Error restoring todo:', data.error);
             }
@@ -612,7 +706,7 @@ document.addEventListener("DOMContentLoaded", function () {
         .catch(error => console.error('Erreur lors de la suppression de l\'utilisateur: ', error));
     }
 
-    RecupCategories();
+    populateCategories();
     const storedUserId = localStorage.getItem('userId');
     const storedUserRole = localStorage.getItem('userRole');
     if (storedUserId) {
