@@ -3,15 +3,18 @@ require_once(ROOT . '/utils/AbstractService.php');
 require_once(ROOT . '/utils/BaseService.php');
 require_once(ROOT . '/dao/UtilisateurDao.php');
 require_once(ROOT . '/dao/StatutDao.php');
+require_once(ROOT . '/dao/CategorieDao.php');
 require_once(ROOT . '/utils/DbSingleton.php');
 
 class AdminService extends AbstractService implements BaseService {
     private $utilisateurDao;
     private $statutDao;
+    private $categorieDao;
 
     public function __construct() {
         $this->utilisateurDao = new UtilisateurDao(DbSingleton::getInstance()->getConnection());
         $this->statutDao = new StatutDao(DbSingleton::getInstance()->getConnection());
+        $this->categorieDao = new CategorieDao(DbSingleton::getInstance()->getConnection());
     }
 
     public function fetchAll() {
@@ -54,6 +57,10 @@ class AdminService extends AbstractService implements BaseService {
 
     public function listStatus() {
         return $this->statutDao->fetchAll();
+    }
+
+    public function listCategories() {
+        return $this->categorieDao->fetchAll();
     }
 
     public function createStatus($data) {

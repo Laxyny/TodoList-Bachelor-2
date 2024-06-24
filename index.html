@@ -38,6 +38,7 @@
             <option value="2">Normale</option>
             <option value="3">Haute</option>
         </select>
+        <select id="todoCategorie"></select>
         <button type="submit">Add Todo</button>
     </form>
 
@@ -66,6 +67,16 @@
             <form id="createStatusForm">
                 <input type="text" id="createStatusName" placeholder="Status Name">
                 <button type="submit">Create Status</button>
+            </form>
+        </div>
+        <div id="categoriesManagement">
+            <h3>Manage Categories</h3>
+            <button id="listCategoriesButton">List Categories</button>
+            <div id="categoriesList"></div>
+            <h4>Create Categorie</h4>
+            <form id="createCategoriesForm">
+                <input type="text" id="createCategorieName" placeholder="Categorie Name">
+                <button type="submit">Create Categorie</button>
             </form>
         </div>
         <div>

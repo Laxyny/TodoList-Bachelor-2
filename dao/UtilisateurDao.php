@@ -58,5 +58,11 @@ class UtilisateurDao {
         }
         return ['success' => true];
     }
+
+    public function delete($id) {
+        $stmt = $this->conn->prepare("DELETE FROM utilisateurs WHERE id_utilisateur = ?");
+        $stmt->bind_param("i", $id);
+        return $stmt->execute();
+    }
 }
 ?>

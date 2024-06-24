@@ -28,7 +28,7 @@ class UtilisateurService extends AbstractService implements BaseService {
     }
 
     public function delete($id) {
-        // Implémentation si nécessaire
+        return $this->utilisateurDao->delete($id);
     }
 
     public function login($utilisateur, $password) {

@@ -43,6 +43,9 @@ class AdminController extends AbstractController {
             case 'list_status':
                 $this->listAllStatus();
                 break;
+            case 'list_categories':
+                $this->listAllCategories();
+                break;
             case 'create_status':
                 //$this->response = $this->service->createStatus($this->form);
                 break;
@@ -70,6 +73,15 @@ class AdminController extends AbstractController {
             $this->response = $status;
         } catch (Exception $e) {
             $this->response = ['success' => false, 'error' => 'Error fetching status: ' . $e->getMessage()];
+        }
+    }
+
+    private function listAllCategories() {
+        try {
+            $categories = $this->service->listCategories();
+            $this->response = $categories;
+        } catch (Exception $e) {
+            $this->response = ['success' => false, 'error' => 'Error fetching categories: ' . $e->getMessage()];
         }
     }
 

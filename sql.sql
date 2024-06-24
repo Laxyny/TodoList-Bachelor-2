@@ -49,17 +49,19 @@ CREATE TABLE `todo` (
     `date_echeance` DATE NOT NULL,
     `id_statut` INT,
     `id_priorite` INT,
+    `id_categorie` INT,
     `id_utilisateur` INT,
     FOREIGN KEY (`id_statut`) REFERENCES `statut`(`id_statut`),
     FOREIGN KEY (`id_priorite`) REFERENCES `priorites`(`id_priorite`),
+    FOREIGN KEY (`id_categorie`) REFERENCES `categories`(`id_categorie`),
     FOREIGN KEY (`id_utilisateur`) REFERENCES `utilisateurs`(`id_utilisateur`)
 );
 -- Insertion des données dans la table `todo`
-INSERT INTO `todo` (`id_todo`, `titre`, `description`, `date_creation`, `date_echeance`, `id_statut`, `id_priorite`, `id_utilisateur`) 
+INSERT INTO `todo` (`id_todo`, `titre`, `description`, `date_creation`, `date_echeance`, `id_statut`, `id_priorite`, `id_categorie`, `id_utilisateur`) 
 VALUES 
-(1, 'Acheter du pain', 'Boulangerie', '2024-01-29', '2024-01-30', 1, 1, 1),
-(2, 'Réparer la voiture', 'Garagiste', '2024-05-22', '2024-05-22', 2, 2, 1),
-(3, 'Réparer la voiture', 'Garagiste', '2024-05-22', '2024-05-22', 2, 2, 2);
+(1, 'Acheter du pain', 'Boulangerie', '2024-01-29', '2024-01-30', 1, 1, 1, 1),
+(2, 'Réparer la voiture', 'Garagiste', '2024-05-22', '2024-05-22', 2, 2, 1, 1),
+(3, 'Réparer la voiture', 'Garagiste', '2024-05-22', '2024-05-22', 2, 2, 1, 2);
 
 -- Création de la table `modifications`
 CREATE TABLE `modifications` (

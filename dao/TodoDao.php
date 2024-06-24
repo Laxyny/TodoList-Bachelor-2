@@ -10,7 +10,7 @@ class TodoDao {
     }
 
     public function fetchAll() {
-        $stmt = $this->conn->prepare("SELECT id_todo, titre, description, date_creation, date_echeance, id_statut, id_priorite, id_utilisateur FROM todo");
+        $stmt = $this->conn->prepare("SELECT id_todo, titre, description, date_creation, date_echeance, id_statut, id_priorite, id_categorie, id_utilisateur FROM todo");
         if (!$stmt) {
             error_log('Error preparing statement: ' . $this->conn->error);
             return [];
@@ -28,6 +28,7 @@ class TodoDao {
                 $row['date_echeance'],
                 $row['id_statut'],
                 $row['id_priorite'],
+                $row['id_categorie'],
                 $row['id_utilisateur']
             );
             $todos[] = $todo;
@@ -38,7 +39,7 @@ class TodoDao {
     }
 
     public function fetch($id) {
-        $stmt = $this->conn->prepare("SELECT id_todo, titre, description, date_creation, date_echeance, id_statut, id_priorite, id_utilisateur FROM todo WHERE id_utilisateur = ?");
+        $stmt = $this->conn->prepare("SELECT id_todo, titre, description, date_creation, date_echeance, id_statut, id_priorite, id_categorie, id_utilisateur FROM todo WHERE id_utilisateur = ?");
         if (!$stmt) {
             error_log('Error preparing statement: ' . $this->conn->error);
             return [];
@@ -57,6 +58,7 @@ class TodoDao {
                 $row['date_echeance'],
                 $row['id_statut'],
                 $row['id_priorite'],
+                $row['id_categorie'],
                 $row['id_utilisateur']
             );
             $todos[] = $todo;
@@ -68,10 +70,11 @@ class TodoDao {
 
     public function fetchAllByUser($userId) {
         $stmt = $this->conn->prepare("
-            SELECT todo.*, statut.libelle as libelle_statut, priorites.libelle as libelle_priorite 
+            SELECT todo.*, statut.libelle as libelle_statut, priorites.libelle as libelle_priorite, categories.libelle as libelle_categorie
             FROM todo 
             JOIN statut ON todo.id_statut = statut.id_statut 
             JOIN priorites ON todo.id_priorite = priorites.id_priorite 
+            JOIN categories ON todo.id_categorie = categories.id_categorie 
             WHERE id_utilisateur = ?
         ");
         if (!$stmt) {
@@ -90,7 +93,7 @@ class TodoDao {
     
 
     public function fetchAllWithDeleted($userId) {
-        $stmt = $this->conn->prepare("SELECT id_todo, titre, description, date_creation, date_echeance, id_statut, id_priorite, id_utilisateur FROM todo WHERE id_utilisateur = ?");
+        $stmt = $this->conn->prepare("SELECT id_todo, titre, description, date_creation, date_echeance, id_statut, id_priorite, id_categorie, id_utilisateur FROM todo WHERE id_utilisateur = ?");
         if (!$stmt) {
             error_log('Error preparing statement: ' . $this->conn->error);
             return [];
@@ -108,6 +111,7 @@ class TodoDao {
                 $row['date_echeance'],
                 $row['id_statut'],
                 $row['id_priorite'],
+                $row['id_categorie'],
                 $row['id_utilisateur']
             );
         }
@@ -116,10 +120,11 @@ class TodoDao {
 
     public function fetchDeletedTodos() {
         $stmt = $this->conn->prepare("
-            SELECT todo.*, statut.libelle as libelle_statut, priorites.libelle as libelle_priorite 
+            SELECT todo.*, statut.libelle as libelle_statut, priorites.libelle as libelle_priorite, categories.libelle as libelle_categorie 
             FROM todo 
             JOIN statut ON todo.id_statut = statut.id_statut 
             JOIN priorites ON todo.id_priorite = priorites.id_priorite 
+            JOIN categories ON todo.id_categorie = categories.id_categorie 
             WHERE todo.id_statut = 4
         ");
         if (!$stmt) {
@@ -135,13 +140,13 @@ class TodoDao {
         return $todos;
     }
 
-    public function insert($titre, $description, $date_creation, $date_echeance, $id_statut, $id_priorite, $id_utilisateur) {
-        $stmt = $this->conn->prepare("INSERT INTO todo (titre, description, date_creation, date_echeance, id_statut, id_priorite, id_utilisateur) VALUES (?, ?, ?, ?, ?, ?, ?)");
+    public function insert($titre, $description, $date_creation, $date_echeance, $id_statut, $id_priorite, $id_categorie, $id_utilisateur) {
+        $stmt = $this->conn->prepare("INSERT INTO todo (titre, description, date_creation, date_echeance, id_statut, id_priorite, id_categorie, id_utilisateur) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
         if (!$stmt) {
             error_log('Error preparing statement: ' . $this->conn->error);
             return ['success' => false, 'error' => $this->conn->error];
         }
-        $stmt->bind_param("ssssiii", $titre, $description, $date_creation, $date_echeance, $id_statut, $id_priorite, $id_utilisateur);
+        $stmt->bind_param("ssssiiii", $titre, $description, $date_creation, $date_echeance, $id_statut, $id_priorite, $id_categorie, $id_utilisateur);
         $result = $stmt->execute();
         if (!$result) {
             error_log('Error executing statement: ' . $stmt->error);

@@ -7,9 +7,10 @@ class Todo {
     public $date_echeance;
     public $id_statut;
     public $id_priorite;
+    public $id_categorie;
     public $id_utilisateur;
 
-    public function __construct($id_todo, $titre, $description, $date_creation, $date_echeance, $id_statut, $id_priorite, $id_utilisateur) {
+    public function __construct($id_todo, $titre, $description, $date_creation, $date_echeance, $id_statut, $id_priorite, $id_categorie, $id_utilisateur) {
         $this->id_todo = $id_todo;
         $this->titre = $titre;
         $this->description = $description;
@@ -17,6 +18,7 @@ class Todo {
         $this->date_echeance = $date_echeance;
         $this->id_statut = $id_statut;
         $this->id_priorite = $id_priorite;
+        $this->id_categorie = $id_categorie;
         $this->id_utilisateur = $id_utilisateur;
     }
 }

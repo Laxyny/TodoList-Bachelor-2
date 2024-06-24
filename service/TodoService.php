@@ -40,13 +40,14 @@ class TodoService extends AbstractService implements BaseService {
         $date_echeance = $data['date_echeance'] ?? '';
         $id_statut = $data['id_statut'] ?? 1; // Par défaut, le statut est créé
         $id_priorite = $data['id_priorite'] ?? 1; // Par défaut, la priorité est normale
+        $id_categorie = $data['id_categorie'] ?? 1; // Par défaut, la categorie est null
         $id_utilisateur = $data['id_utilisateur'] ?? '';
     
         if (empty($titre) || empty($description) || empty($date_echeance) || empty($id_utilisateur) || empty($date_creation)) {
             return ['success' => false, 'error' => 'All fields are required'];
         }
     
-        return $this->todoDao->insert($titre, $description, $date_creation, $date_echeance, $id_statut, $id_priorite, $id_utilisateur);
+        return $this->todoDao->insert($titre, $description, $date_creation, $date_echeance, $id_statut, $id_priorite, $id_categorie, $id_utilisateur);
     }
 
     public function insert($entity) {

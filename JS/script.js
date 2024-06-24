@@ -29,8 +29,15 @@ document.addEventListener("DOMContentLoaded", function () {
     const createStatusForm = document.getElementById('createStatusForm');
     const createStatusName = document.getElementById('createStatusName');
 
+    const listCategoriesButton = document.getElementById('listCategoriesButton');
+    const categoriesList = document.getElementById('categoriesList');
+    const createCategoriesForm = document.getElementById('createCategoriesForm');
+    const createCategorieName = document.getElementById('createCategorieName');
+
     const listDeletedTodosButton = document.getElementById('listDeletedTodosButton');
     const deletedTodoList = document.getElementById('deletedTodoList');
+
+    const todoCategorie = document.getElementById('todoCategorie');
 
     if (!todoList) {
         console.error('Element with ID "todo-list" not found.');
@@ -142,6 +149,7 @@ document.addEventListener("DOMContentLoaded", function () {
         showLoginForm();
     });
 
+    //Créer un todo
     todoForm.addEventListener('submit', function (event) {
         event.preventDefault();
 
@@ -150,6 +158,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const date_echeance = todoDueDate.value;
         const id_statut = todoStatus.value;
         const id_priorite = todoPriority.value;
+        const id_categorie = todoCategorie.value;
         const id_utilisateur = localStorage.getItem('userId');
 
         const date_creation = new Date().toISOString().split('T')[0];
@@ -159,7 +168,7 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        const requestData = { action: 'create_todo', titre, description, date_creation, date_echeance, id_statut, id_priorite, id_utilisateur };
+        const requestData = { action: 'create_todo', titre, description, date_creation, date_echeance, id_statut, id_priorite, id_categorie, id_utilisateur };
         console.log('Sending todo data:', requestData);
 
         fetch('controllers/TodoPostController.php', {
@@ -183,6 +192,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 todoDueDate.value = '';
                 todoStatus.value = '';
                 todoPriority.value = '';
+                todoCategorie.value = '';
             } else {
                 console.error('Error adding todo:', data.error);
             }
@@ -192,6 +202,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
+    //Afficher les utilisateurs (ADMIN)
     listUsersButton.addEventListener('click', function () {
         fetch('controllers/AdminController.php', {
             method: 'POST',
@@ -211,6 +222,13 @@ document.addEventListener("DOMContentLoaded", function () {
             data.forEach(user => {
                 const userItem = document.createElement('div');
                 userItem.textContent = `${user.utilisateur} ${user.mot_de_passe} (${user.role})`;
+
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Supprimer';
+                deleteButton.addEventListener('click', function () {
+                    deleteUserAdmin(user.id_utilisateur);
+                });
+                userItem.appendChild(deleteButton);
                 userList.appendChild(userItem);
             });
         })
@@ -298,6 +316,71 @@ document.addEventListener("DOMContentLoaded", function () {
         .catch(error => console.error('Error creating status:', error));
     });
 
+    // Bouton et champs de texte pour les catégories
+    listCategoriesButton.addEventListener('click', function () {
+        fetch('controllers/AdminController.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ action: 'list_categories' })
+        })
+        .then(response => response.json())
+        .then(data => {
+            categoriesList.innerHTML = '';
+            data.forEach(categories => {
+                const categoriesItem = document.createElement('div');
+                categoriesItem.textContent = `${categories.id_categorie} - ${categories.libelle}`;
+
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Supprimer';
+                deleteButton.addEventListener('click', function () {
+                    deleteCategorieAdmin(categories.id_categorie);
+                });
+                categoriesItem.appendChild(deleteButton);
+                categoriesList.appendChild(categoriesItem);
+            });
+        })
+        .catch(error => console.error('Error listing categories:', error));
+    });
+
+    createCategoriesForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        const name = createCategorieName.value;
+
+        const requestData = { action: 'create_categorie', name };
+        fetch('controllers/CategoriePostController.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                createCategorieName.value = '';
+                listCategoriesButton.click();
+            } else {
+                console.error('Error creating categorie:', data.error);
+            }
+        })
+        .catch(error => console.error('Error creating categories:', error));
+    });
+
+//Affiche les differentes catégorties lors de la création d'un todo (todoCategorie)
+    fetch('controllers/CategorieGetController.php')
+    .then(response => response.json())
+    .then(data => {
+        data.forEach(item => {
+            const option = document.createElement('option');
+            option.value = item.id_categorie;
+            option.textContent = item.libelle;
+            todoCategorie.appendChild(option);
+        });
+    })
+
     listDeletedTodosButton.addEventListener('click', function () {
         fetch('controllers/TodoGetController.php?action=fetch_deleted')
         .then(response => response.json())
@@ -305,7 +388,7 @@ document.addEventListener("DOMContentLoaded", function () {
             deletedTodoList.innerHTML = '';
             data.forEach(item => {
                 const listItem = document.createElement('div');
-                listItem.innerHTML = `<strong>${item.titre}</strong>: ${item.description} (Créé le ${item.date_creation}, Échéance: ${item.date_echeance})<br>Status: ${item.libelle_statut}, Priority: ${item.libelle_priorite}`;
+                listItem.innerHTML = `<strong>${item.titre}</strong>: ${item.description} (Créé le ${item.date_creation}, Échéance: ${item.date_echeance})<br>Status: ${item.libelle_statut}, Priority: ${item.libelle_priorite}, Categorie: ${item.libelle_categorie}`;
                 const restoreButton = document.createElement('button');
                 restoreButton.textContent = 'Restore';
                 restoreButton.addEventListener('click', function () {
@@ -317,6 +400,9 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .catch(error => console.error('Error listing deleted todos:', error));
     });
+
+
+
 
     function fetchTodos(userId) {
         fetch(`controllers/TodoGetController.php?userId=${userId}`)
@@ -337,7 +423,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 data.forEach(item => {
                     if (item.id_statut != 4) {
                         const listItem = document.createElement('div');
-                        listItem.innerHTML = `<strong>${item.titre}</strong>: ${item.description} (Créé le ${item.date_creation}, Échéance: ${item.date_echeance})<br>Status: ${item.libelle_statut}, Priority: ${item.libelle_priorite}`;
+                        listItem.innerHTML = `<strong>${item.titre}</strong>: ${item.description} (Créé le ${item.date_creation}, Échéance: ${item.date_echeance})<br>Status: ${item.libelle_statut}, Priority: ${item.libelle_priorite}, Categorie: ${item.libelle_categorie}`;
                         const editButton = document.createElement('button');
                         editButton.textContent = 'Edit';
                         editButton.addEventListener('click', function () {
@@ -427,6 +513,46 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         })
         .catch(error => console.error('Error restoring todo:', error));
+    }
+
+    function deleteCategorieAdmin(categorieId) {
+        const requestData = { action: 'delete_categorie_admin', categorieId };
+        fetch('controllers/CategoriePostController.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                listCategoriesButton.click();
+            } else {
+                console.error('Erreur lors de la suppression de la catégorie: ', data.error);
+            }
+        })
+        .catch(error => console.error('Erreur lors de la suppression de la catégorie: ', error));
+    }
+
+    function deleteUserAdmin(userId) {
+        const requestData = { action: 'delete_user_admin', userId };
+        fetch('controllers/UtilisateurPostController.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                listUsersButton.click();
+            } else {
+                console.error('Erreur lors de la suppression de l\'utilisateur: ', data.error);
+            }
+        })
+        .catch(error => console.error('Erreur lors de la suppression de l\'utilisateur: ', error));
     }
 
     const storedUserId = localStorage.getItem('userId');
