@@ -15,6 +15,17 @@ document.addEventListener("DOMContentLoaded", function () {
     const todoDueDate = document.getElementById('todoDueDate');
     const todoStatus = document.getElementById('todoStatus');
     const todoPriority = document.getElementById('todoPriority');
+    const todoCategorie = document.getElementById('todoCategorie');
+
+    const todoEditForm = document.getElementById('todoEditForm');
+    const todoEditTitle = document.getElementById('todoEditTitle');
+    const todoEditDescription = document.getElementById('todoEditDescription');
+    const todoEditDueDate = document.getElementById('todoEditDueDate');
+    const todoEditStatus = document.getElementById('todoEditStatus');
+    const todoEditPriority = document.getElementById('todoEditPriority');
+    const todoEditCategorie = document.getElementById('todoEditCategorie');
+    const todoModificationList = document.getElementById('todoModificationList');
+    const cancelEditButton = document.getElementById('cancelEditButton');
 
     const adminPanel = document.getElementById('adminPanel');
     const listUsersButton = document.getElementById('listUsersButton');
@@ -36,8 +47,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const listDeletedTodosButton = document.getElementById('listDeletedTodosButton');
     const deletedTodoList = document.getElementById('deletedTodoList');
-
-    const todoCategorie = document.getElementById('todoCategorie');
 
     if (!todoList) {
         console.error('Element with ID "todo-list" not found.');
@@ -427,7 +436,15 @@ document.addEventListener("DOMContentLoaded", function () {
                         const editButton = document.createElement('button');
                         editButton.textContent = 'Edit';
                         editButton.addEventListener('click', function () {
-                            editTodoStatus(item.id_todo, item.libelle_statut, item.libelle_priorite);
+                            editTodo(
+                                item.id_todo,
+                                item.titre,
+                                item.description,
+                                item.date_echeance,
+                                item.id_statut,
+                                item.id_priorite,
+                                item.id_categorie
+                            );
                         });
                         const deleteButton = document.createElement('button');
                         deleteButton.textContent = 'Delete';
@@ -449,11 +466,28 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    function editTodoStatus(todoId, currentStatus, currentPriority) {
-        const newStatus = prompt("Enter new status for the todo:", currentStatus);
-        const newPriority = prompt("Enter new priority for the todo:", currentPriority);
-        if (newStatus && newPriority) {
-            const requestData = { action: 'edit_status', todoId, newStatus, newPriority };
+    function editTodo(todoId, currentTitle, currentDescription, currentDueDate, currentStatus, currentPriority, currentCategorie) {
+        todoEditTitle.value = currentTitle;
+        todoEditDescription.value = currentDescription;
+        todoEditDueDate.value = currentDueDate;
+        todoEditStatus.value = currentStatus;
+        todoEditPriority.value = currentPriority;
+        todoEditCategorie.value = currentCategorie;
+
+        todoEditForm.style.display = 'block';
+
+        todoEditForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const newTitle = todoEditTitle.value;
+            const newDescription = todoEditDescription.value;
+            const newDueDate = todoEditDueDate.value;
+            const newStatus = todoEditStatus.value;
+            const newPriority = todoEditPriority.value;
+            const newCategorie = todoEditCategorie.value;
+
+            const requestData = { action: 'edit_todo', todoId, newTitle, newDescription, newDueDate, newStatus, newPriority, newCategorie };
+
             fetch('controllers/TodoPostController.php', {
                 method: 'POST',
                 headers: {
@@ -466,12 +500,31 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (data.success) {
                     const userId = localStorage.getItem('userId');
                     fetchTodos(userId);
+                    todoEditForm.style.display = 'none';
                 } else {
-                    console.error('Error editing status:', data.error);
+                    console.error('Error editing todo:', data.error);
                 }
             })
-            .catch(error => console.error('Error editing status:', error));
-        }
+            .catch(error => console.error('Error editing todo:', error));
+        });
+
+        cancelEditButton.addEventListener('click', function () {
+            todoEditForm.style.display = 'none';
+        });
+    }
+
+    function RecupCategories() {
+        fetch('controllers/CategorieGetController.php')
+        .then(response => response.json())
+        .then(data => {
+            todoEditCategorie.innerHTML = ''; // Clear previous options
+            data.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.id_categorie;
+                option.textContent = item.libelle;
+                todoEditCategorie.appendChild(option);
+            });
+        });
     }
 
     function deleteTodo(todoId) {
@@ -555,6 +608,7 @@ document.addEventListener("DOMContentLoaded", function () {
         .catch(error => console.error('Erreur lors de la suppression de l\'utilisateur: ', error));
     }
 
+    RecupCategories();
     const storedUserId = localStorage.getItem('userId');
     const storedUserRole = localStorage.getItem('userRole');
     if (storedUserId) {

@@ -62,8 +62,8 @@ class TodoService extends AbstractService implements BaseService {
         return $this->todoDao->delete($id);
     }
 
-    public function editStatus($id, $newStatus) {
-        return $this->todoDao->editStatus($id, $newStatus);
+    public function editStatus($id, $newTitle, $newDescription, $newDueDate, $newStatus, $newPriority, $newCategorie) {
+        return $this->todoDao->editStatus($id, $newTitle, $newDescription, $newDueDate, $newStatus, $newPriority, $newCategorie);
     }
 
     public function restore($id) {

@@ -34,17 +34,6 @@ class TodoPostController extends AbstractController {
                 $this->response = $this->service->create($this->form);
                 break;
             
-            case 'edit_status':
-                $todoId = $this->form['todoId'] ?? '';
-                $newStatus = $this->form['newStatus'] ?? '';
-                if (empty($todoId) || empty($newStatus)) {
-                    $this->response = ['success' => false, 'error' => 'Todo ID and new status are required'];
-                    return;
-                }
-                $this->service->editStatus($todoId, $newStatus);
-                $this->response = ['success' => true];
-                break;
-            
             case 'delete_todo':
                 $todoId = $this->form['todoId'] ?? '';
                 if (empty($todoId)) {
@@ -78,6 +67,22 @@ class TodoPostController extends AbstractController {
                         $this->response = ['success' => false, 'error' => 'Todo ID is required'];
                     }
                     break;
+
+                    case 'edit_todo':
+                        $todoId = $this->form['todoId'] ?? '';
+                        $newTitle = $this->form['newTitle'] ?? '';
+                        $newDescription = $this->form['newDescription'] ?? '';
+                        $newDueDate = $this->form['newDueDate'] ?? '';
+                        $newStatus = $this->form['newStatus'] ?? '';
+                        $newPriority = $this->form['newPriority'] ?? '';
+                        $newCategorie = $this->form['newCategorie'] ?? '';
+                        if (empty($newTitle) || empty($newDescription) || empty($newDueDate) || empty($todoId) || empty($newStatus) || empty($newPriority) || empty($newCategorie)) {
+                            $this->response = ['success' => false, 'error' => 'Les champs ne sont pas remplis'];
+                            return;
+                        }
+                        $this->service->editStatus($todoId, $newTitle, $newDescription, $newDueDate, $newStatus, $newPriority, $newCategorie);
+                        $this->response = ['success' => true];
+                        break;
             
             default:
                 $this->response = ['success' => false, 'error' => 'Invalid action'];

@@ -42,6 +42,27 @@
         <button type="submit">Add Todo</button>
     </form>
 
+    <form id="todoEditForm" style="display: none;">
+        <input type="text" id="todoEditTitle" placeholder="Title">
+        <input type="text" id="todoEditDescription" placeholder="Description">
+        <input type="date" id="todoEditDueDate" placeholder="Due Date">
+        <input type="hidden" id="userIdEdit" value="/* ID de l'utilisateur connecté */">
+        <select id="todoEditStatus">
+            <option value="1">Créé</option>
+            <option value="2">En cours</option>
+            <option value="3">Effectué</option>
+        </select>
+        <select id="todoEditPriority">
+            <option value="1">Basse</option>
+            <option value="2">Normale</option>
+            <option value="3">Haute</option>
+        </select>
+        <select id="todoEditCategorie"></select>
+        <button type="submit">Save Changes</button>
+        <button type="button" id="cancelEditButton">Cancel</button>
+        <div id="todoModificationList"></div>
+    </form>
+
     <div id="adminPanel" style="display: none;">
         <h2>Admin Panel</h2>
         <div id="userManagement">

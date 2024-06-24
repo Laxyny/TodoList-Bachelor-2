@@ -156,13 +156,13 @@ class TodoDao {
     }
     
 
-    public function editStatus($id, $newStatus) {
-        $stmt = $this->conn->prepare("UPDATE todo SET id_statut = ? WHERE id_todo = ?");
+    public function editStatus($id, $newTitle, $newDescription, $newDueDate, $newStatus, $newPriority, $newCategorie) {
+        $stmt = $this->conn->prepare("UPDATE todo SET titre = ?, description = ?, date_echeance = ?, id_statut = ?, id_priorite = ?, id_categorie = ? WHERE id_todo = ?");
         if (!$stmt) {
             error_log('Error preparing statement: ' . $this->conn->error);
             return ['success' => false, 'error' => $this->conn->error];
         }
-        $stmt->bind_param("ii", $newStatus, $id);
+        $stmt->bind_param("sssiiii", $newTitle, $newDescription, $newDueDate, $newStatus, $newPriority, $newCategorie, $id);
         return $stmt->execute();
     }
 
