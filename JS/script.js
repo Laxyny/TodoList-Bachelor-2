@@ -1,10 +1,18 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // Création dynamique des éléments HTML
     const body = document.body;
+
+    // Conteneur principal pour centrer les éléments
+    const mainContainer = document.createElement('div');
+    mainContainer.classList.add('container');
+    body.appendChild(mainContainer);
+
+    const logoutContainer = document.createElement('div');
+    logoutContainer.classList.add('logout-container');
+    mainContainer.appendChild(logoutContainer);
 
     const todoList = document.createElement('div');
     todoList.id = 'todo-list';
-    body.appendChild(todoList);
+    mainContainer.appendChild(todoList);
 
     const loginForm = document.createElement('form');
     loginForm.id = 'loginForm';
@@ -14,7 +22,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <button type="submit">Login</button>
         <div id="loginError"></div>
     `;
-    body.appendChild(loginForm);
+    mainContainer.appendChild(loginForm);
 
     const registerForm = document.createElement('form');
     registerForm.id = 'registerForm';
@@ -24,13 +32,13 @@ document.addEventListener("DOMContentLoaded", function () {
         <button type="submit">Register</button>
         <div id="registerError"></div>
     `;
-    body.appendChild(registerForm);
+    mainContainer.appendChild(registerForm);
 
     const logoutButton = document.createElement('button');
     logoutButton.id = 'logoutButton';
     logoutButton.style.display = 'none';
     logoutButton.textContent = 'Logout';
-    body.appendChild(logoutButton);
+    logoutContainer.appendChild(logoutButton);
 
     const todoForm = document.createElement('form');
     todoForm.id = 'todoForm';
@@ -52,7 +60,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <select id="todoCategorie"></select>
         <button type="submit">Add Todo</button>
     `;
-    body.appendChild(todoForm);
+    mainContainer.appendChild(todoForm);
 
     const todoEditForm = document.createElement('form');
     todoEditForm.id = 'todoEditForm';
@@ -75,55 +83,86 @@ document.addEventListener("DOMContentLoaded", function () {
         <button type="submit">Save Changes</button>
         <button type="button" id="cancelEditButton">Cancel</button>
     `;
-    body.appendChild(todoEditForm);
+    mainContainer.appendChild(todoEditForm);
 
     const adminPanel = document.createElement('div');
     adminPanel.id = 'adminPanel';
     adminPanel.style.display = 'none';
-    adminPanel.innerHTML = `
-        <h2>Admin Panel</h2>
-        <div id="userManagement">
-            <h3>Manage Users</h3>
-            <button id="listUsersButton">List Users</button>
-            <div id="userList"></div>
-            <h4>Create User</h4>
-            <form id="createUserForm">
-                <input type="text" id="createUserUtilisateur" placeholder="Utilisateur" required>
-                <input type="password" id="createUserPassword" placeholder="Password" required>
-                <select id="createUserRole">
-                    <option value="user">User</option>
-                    <option value="admin">Admin</option>
-                </select>
-                <button type="submit">Create User</button>
-            </form>
-        </div>
-        <div id="statusManagement">
-            <h3>Manage Statuses</h3>
-            <button id="listStatusesButton">List Statuses</button>
-            <div id="statusList"></div>
-            <h4>Create Status</h4>
-            <form id="createStatusForm">
-                <input type="text" id="createStatusName" placeholder="Status Name">
-                <button type="submit">Create Status</button>
-            </form>
-        </div>
-        <div id="categoriesManagement">
-            <h3>Manage Categories</h3>
-            <button id="listCategoriesButton">List Categories</button>
-            <div id="categoriesList"></div>
-            <h4>Create Categorie</h4>
-            <form id="createCategoriesForm">
-                <input type="text" id="createCategorieName" placeholder="Categorie Name">
-                <button type="submit">Create Categorie</button>
-            </form>
-        </div>
-        <div>
-            <h3>Manage Deleted Todos</h3>
-            <button id="listDeletedTodosButton">List Deleted Todos</button>
-            <div id="deletedTodoList"></div>
-        </div>
+    
+    const toggleAdminButton = document.createElement('button');
+    toggleAdminButton.id = 'toggleAdminButton';
+    toggleAdminButton.textContent = 'Afficher le menu Admin';
+    mainContainer.appendChild(adminPanel);
+    mainContainer.appendChild(toggleAdminButton);
+
+    const adminSectionContainer = document.createElement('div');
+    adminSectionContainer.classList.add('admin-section-container');
+    adminPanel.appendChild(adminSectionContainer);
+
+    const userManagement = document.createElement('div');
+    userManagement.classList.add('admin-section');
+    userManagement.innerHTML = `
+        <h3>Manage Users</h3>
+        <button id="listUsersButton">List Users</button>
+        <div id="userList"></div>
+        <h4>Create User</h4>
+        <form id="createUserForm">
+            <input type="text" id="createUserUtilisateur" placeholder="Utilisateur" required>
+            <input type="password" id="createUserPassword" placeholder="Password" required>
+            <select id="createUserRole">
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+            </select>
+            <button type="submit">Create User</button>
+        </form>
     `;
-    body.appendChild(adminPanel);
+    adminSectionContainer.appendChild(userManagement);
+
+    const statusManagement = document.createElement('div');
+    statusManagement.classList.add('admin-section');
+    statusManagement.innerHTML = `
+        <h3>Manage Statuses</h3>
+        <button id="listStatusesButton">List Statuses</button>
+        <div id="statusList"></div>
+        <h4>Create Status</h4>
+        <form id="createStatusForm">
+            <input type="text" id="createStatusName" placeholder="Status Name">
+            <button type="submit">Create Status</button>
+        </form>
+    `;
+    adminSectionContainer.appendChild(statusManagement);
+
+    const categoriesManagement = document.createElement('div');
+    categoriesManagement.classList.add('admin-section');
+    categoriesManagement.innerHTML = `
+        <h3>Manage Categories</h3>
+        <button id="listCategoriesButton">List Categories</button>
+        <div id="categoriesList"></div>
+        <h4>Create Categorie</h4>
+        <form id="createCategoriesForm">
+            <input type="text" id="createCategorieName" placeholder="Categorie Name">
+            <button type="submit">Create Categorie</button>
+        </form>
+    `;
+    adminSectionContainer.appendChild(categoriesManagement);
+
+    const deletedTodosManagement = document.createElement('div');
+    deletedTodosManagement.classList.add('admin-section');
+    deletedTodosManagement.innerHTML = `
+        <h3>Manage Deleted Todos</h3>
+        <button id="listDeletedTodosButton">List Deleted Todos</button>
+        <div id="deletedTodoList"></div>
+    `;
+    adminSectionContainer.appendChild(deletedTodosManagement);
+
+    // Ajout de l'événement pour basculer la visibilité du panneau admin
+    toggleAdminButton.addEventListener('click', function () {
+        if (adminPanel.style.display === 'none') {
+            adminPanel.style.display = 'block';
+        } else {
+            adminPanel.style.display = 'none';
+        }
+    });
 
     // Références aux éléments dynamiques
     const loginError = document.getElementById('loginError');
@@ -484,7 +523,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Affiche les différentes catégories lors de la création d'un todo (todoCategorie)
-    function populateCategories() {
+    function RecupCategories() {
         fetch('controllers/CategorieGetController.php')
         .then(response => response.json())
         .then(data => {
@@ -504,18 +543,44 @@ document.addEventListener("DOMContentLoaded", function () {
         fetch('controllers/TodoGetController.php?action=fetch_deleted')
         .then(response => response.json())
         .then(data => {
-            deletedTodoList.innerHTML = '';
+            deletedTodoList.innerHTML = ''; // Clear the list
+            const table = document.createElement('table');
+            table.innerHTML = `
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Created</th>
+                        <th>Due Date</th>
+                        <th>Status</th>
+                        <th>Priority</th>
+                        <th>Category</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            `;
+            const tbody = table.querySelector('tbody');
             data.forEach(item => {
-                const listItem = document.createElement('div');
-                listItem.innerHTML = `<strong>${item.titre}</strong>: ${item.description} (Créé le ${item.date_creation}, Échéance: ${item.date_echeance})<br>Status: ${item.libelle_statut}, Priority: ${item.libelle_priorite}, Categorie: ${item.libelle_categorie}`;
-                const restoreButton = document.createElement('button');
-                restoreButton.textContent = 'Restore';
-                restoreButton.addEventListener('click', function () {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.titre}</td>
+                    <td>${item.description}</td>
+                    <td>${item.date_creation}</td>
+                    <td>${item.date_echeance}</td>
+                    <td>${item.libelle_statut}</td>
+                    <td>${item.libelle_priorite}</td>
+                    <td>${item.libelle_categorie}</td>
+                    <td>
+                        <button class="restore-button">Restore</button>
+                    </td>
+                `;
+                row.querySelector('.restore-button').addEventListener('click', function () {
                     restoreTodoAdmin(item.id_todo);
                 });
-                listItem.appendChild(restoreButton);
-                deletedTodoList.appendChild(listItem);
+                tbody.appendChild(row);
             });
+            deletedTodoList.appendChild(table);
         })
         .catch(error => console.error('Error listing deleted todos:', error));
     });
@@ -530,19 +595,46 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .then(data => {
             console.log('Data received from API:', data);
-            todoList.innerHTML = '';
+            todoList.innerHTML = ''; // Clear the list
             if (data.error) {
                 const errorItem = document.createElement('div');
                 errorItem.textContent = 'Error: ' + data.error;
                 todoList.appendChild(errorItem);
             } else {
+                const table = document.createElement('table');
+                table.innerHTML = `
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Description</th>
+                            <th>Created</th>
+                            <th>Due Date</th>
+                            <th>Status</th>
+                            <th>Priority</th>
+                            <th>Category</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                `;
+                const tbody = table.querySelector('tbody');
                 data.forEach(item => {
                     if (item.id_statut != 4) {
-                        const listItem = document.createElement('div');
-                        listItem.innerHTML = `<strong>${item.titre}</strong>: ${item.description} (Créé le ${item.date_creation}, Échéance: ${item.date_echeance})<br>Status: ${item.libelle_statut}, Priority: ${item.libelle_priorite}, Categorie: ${item.libelle_categorie}`;
-                        const editButton = document.createElement('button');
-                        editButton.textContent = 'Edit';
-                        editButton.addEventListener('click', function () {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${item.titre}</td>
+                            <td>${item.description}</td>
+                            <td>${item.date_creation}</td>
+                            <td>${item.date_echeance}</td>
+                            <td>${item.libelle_statut}</td>
+                            <td>${item.libelle_priorite}</td>
+                            <td>${item.libelle_categorie}</td>
+                            <td>
+                                <button class="edit-button">Edit</button>
+                                <button class="delete-button">Delete</button>
+                            </td>
+                        `;
+                        row.querySelector('.edit-button').addEventListener('click', function () {
                             editTodo(
                                 item.id_todo,
                                 item.titre,
@@ -553,16 +645,13 @@ document.addEventListener("DOMContentLoaded", function () {
                                 item.id_categorie
                             );
                         });
-                        const deleteButton = document.createElement('button');
-                        deleteButton.textContent = 'Delete';
-                        deleteButton.addEventListener('click', function () {
+                        row.querySelector('.delete-button').addEventListener('click', function () {
                             deleteTodo(item.id_todo);
                         });
-                        listItem.appendChild(editButton);
-                        listItem.appendChild(deleteButton);
-                        todoList.appendChild(listItem);
+                        tbody.appendChild(row);
                     }
                 });
+                todoList.appendChild(table);
             }
         })
         .catch(error => {
@@ -656,9 +745,9 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                listDeletedTodosButton.click();
                 const userId = localStorage.getItem('userId');
-                fetchTodos(userId);
+                fetchTodos(userId); // Refresh the active todos list
+                listDeletedTodosButton.click(); // Refresh the deleted todos list
             } else {
                 console.error('Error restoring todo:', data.error);
             }
@@ -706,7 +795,7 @@ document.addEventListener("DOMContentLoaded", function () {
         .catch(error => console.error('Erreur lors de la suppression de l\'utilisateur: ', error));
     }
 
-    populateCategories();
+    RecupCategories();
     const storedUserId = localStorage.getItem('userId');
     const storedUserRole = localStorage.getItem('userRole');
     if (storedUserId) {

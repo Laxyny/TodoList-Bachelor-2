@@ -1,0 +1,144 @@
+/* Importation des polices */
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@500&family=Inter:wght@500&display=swap');
+
+/* Style de base pour tout le corps */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #1A1A1A;
+    position: relative; /* Ajouté pour positionner le bouton de déconnexion */
+}
+
+/* Style du conteneur pour le bouton de déconnexion */
+.logout-container {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+/* Centrer les blocs */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+}
+
+/* Style des formulaires */
+form {
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 600px; /* Assurez-vous que les formulaires ne dépassent pas */
+    font-family: 'Roboto Mono', monospace;
+    text-align: center; /* Centrer le texte dans les formulaires */
+    box-sizing: border-box; /* S'assurer que le padding est inclus dans la largeur totale */
+}
+
+/* Style des inputs et selects */
+input[type="text"], input[type="password"], input[type="date"], select {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #D4D4D4;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+/* Style des boutons */
+button {
+    background-color: #9D4BEE;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    font-family: 'Roboto Mono', monospace;
+}
+
+button:hover {
+    background-color: #A5A9F7;
+}
+
+/* Style de la liste des todos */
+#todo-list {
+    width: 100%;
+    max-width: 800px;
+    margin-top: 20px;
+    border-collapse: collapse;
+}
+
+#todo-list th, #todo-list td {
+    border: 1px solid #D4D4D4;
+    padding: 10px;
+    text-align: left;
+}
+
+#todo-list th {
+    background-color: #9D4BEE;
+    color: white;
+}
+
+#todo-list tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+/* Style des boutons dans les todo items */
+#todo-list button {
+    background-color: #14AE5C;
+    margin-left: 5px;
+}
+
+#todo-list button:hover {
+    background-color: #C8CC03;
+}
+
+/* Style des messages d'erreur */
+#error {
+    color: #F24822;
+    margin-bottom: 10px;
+}
+
+/* Style pour les formulaires admin */
+#adminPanel {
+    width: 100%;
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centrer les éléments dans adminPanel */
+    box-sizing: border-box; /* S'assurer que le padding est inclus dans la largeur totale */
+}
+
+#adminPanel div {
+    background-color: #fff;
+    border: 1px solid #D4D4D4;
+    border-radius: 5px;
+    padding: 20px;
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 600px; /* Assurez-vous que les divs ne dépassent pas */
+    text-align: center; /* Centrer le texte dans les divs de adminPanel */
+    box-sizing: border-box; /* S'assurer que le padding est inclus dans la largeur totale */
+}
+
+#adminPanel h2, #adminPanel h3, #adminPanel h4 {
+    color: #1A1A1A;
+}
+
+#adminPanel button {
+    background-color: #757575;
+}
+
+#adminPanel button:hover {
+    background-color: #1A1A1A;
+}
