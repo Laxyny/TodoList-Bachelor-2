@@ -436,7 +436,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         <th>Status</th>
                         <th>Priorité</th>
                         <th>Categorie</th>
-                        <th>Actions</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody></tbody>
