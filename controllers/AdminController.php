@@ -37,25 +37,15 @@ class AdminController extends AbstractController {
             case 'create_user':
                 $this->response = $this->service->createUser($this->form);
                 break;
-            case 'delete_user':
-                //$this->response = $this->service->deleteUser($this->form['id']);
-                break;
             case 'list_status':
                 $this->listAllStatus();
                 break;
             case 'list_categories':
                 $this->listAllCategories();
                 break;
-            case 'create_status':
-                //$this->response = $this->service->createStatus($this->form);
-                break;
-            case 'delete_status':
-                //$this->response = $this->service->deleteStatus($this->form['id']);
-                break;
             default:
                 $this->response = ['success' => false, 'error' => 'Invalid action'];
         }
-        error_log('AdminController response: ' . print_r($this->response, true));
     }
 
     private function listUsers() {
@@ -88,7 +78,6 @@ class AdminController extends AbstractController {
     public function processResponse() {
         header('Content-Type: application/json');
         $jsonResponse = json_encode($this->response);
-        error_log('AdminController JSON response: ' . $jsonResponse);
         echo $jsonResponse;
     }
 }
@@ -96,7 +85,6 @@ class AdminController extends AbstractController {
 try {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $form = json_decode(file_get_contents('php://input'), true);
-        error_log("Form data: " . print_r($form, true));
         if (json_last_error() !== JSON_ERROR_NONE) {
             throw new Exception('Invalid JSON input: ' . json_last_error_msg());
         }

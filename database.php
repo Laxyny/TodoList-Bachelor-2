@@ -11,7 +11,6 @@ class Database {
 
             self::$conn = new mysqli($servername, $username, $password, $dbname);
 
-            // Vérification de la connexion
             if (self::$conn->connect_error) {
                 die("Connexion échouée: " . self::$conn->connect_error);
             }
@@ -19,7 +18,5 @@ class Database {
         return self::$conn;
     }
 }
-
-// Utiliser la connexion dans les DAO sans modifier les fichiers
 $conn = Database::getConnection();
 ?>

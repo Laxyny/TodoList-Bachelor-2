@@ -3,8 +3,8 @@ class DbSingleton {
     private static $instance = null;
     private $conn;
     private $servername = "localhost";
-    private $username = "todo"; // Remplacez par le nom d'utilisateur correct
-    private $password = "openit"; // Remplacez par le mot de passe correct
+    private $username = "todo";
+    private $password = "openit";
     private $dbname = "todo_list";
 
     private function __construct() {

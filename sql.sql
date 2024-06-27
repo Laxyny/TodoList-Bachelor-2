@@ -65,7 +65,7 @@ VALUES
 
 -- Création de la table `modifications`
 CREATE TABLE `modifications` (
-    `id_modifications` INT AUTO_INCREMENT PRIMARY KEY,
+    `id_modification` INT AUTO_INCREMENT PRIMARY KEY,
     `date_modification` DATE NOT NULL,
     `raison_modification` TEXT NOT NULL,
     `id_todo` INT,
@@ -73,7 +73,7 @@ CREATE TABLE `modifications` (
 );
 
 -- Insertion des données dans la table `modifications`
-INSERT INTO `modifications` (`id_modifications`, `date_modification`, `raison_modification`, `id_todo`) 
+INSERT INTO `modifications` (`id_modification`, `date_modification`, `raison_modification`, `id_todo`) 
 VALUES 
 (1, '2024-01-29', 'Modification', 1);
 

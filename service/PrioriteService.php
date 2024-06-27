@@ -8,7 +8,6 @@
 		private $prioriteDao;
 
 		function __construct() {
-			// On n'utilise que les méthodes de l'interface
 			$this->prioriteDao = new PrioriteDao(DbSingleton::getInstance()->getConnection());
 		}
 

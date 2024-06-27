@@ -18,35 +18,25 @@ document.addEventListener("DOMContentLoaded", function () {
     loginForm.id = 'loginForm';
     loginForm.innerHTML = `
         <input type="text" id="loginUtilisateur" placeholder="Utilisateur">
-        <input type="password" id="loginPassword" placeholder="Password">
-        <button type="submit">Login</button>
+        <input type="password" id="loginPassword" placeholder="Mot de passe">
+        <button type="submit">Connexion</button>
         <div id="loginError"></div>
     `;
     mainContainer.appendChild(loginForm);
 
-    const registerForm = document.createElement('form');
-    registerForm.id = 'registerForm';
-    registerForm.innerHTML = `
-        <input type="text" id="registerUtilisateur" placeholder="Utilisateur">
-        <input type="password" id="registerPassword" placeholder="Password">
-        <button type="submit">Register</button>
-        <div id="registerError"></div>
-    `;
-    mainContainer.appendChild(registerForm);
-
     const logoutButton = document.createElement('button');
     logoutButton.id = 'logoutButton';
     logoutButton.style.display = 'none';
-    logoutButton.textContent = 'Logout';
+    logoutButton.textContent = 'Deconnexion';
     logoutContainer.appendChild(logoutButton);
 
     const todoForm = document.createElement('form');
     todoForm.id = 'todoForm';
     todoForm.style.display = 'none';
     todoForm.innerHTML = `
-        <input type="text" id="todoTitle" placeholder="Title">
+        <input type="text" id="todoTitle" placeholder="Titre">
         <input type="text" id="todoDescription" placeholder="Description">
-        <input type="date" id="todoDueDate" placeholder="Due Date">
+        <input type="date" id="todoDueDate" placeholder="Date échéance">
         <select id="todoStatus">
             <option value="1">Créé</option>
             <option value="2">En cours</option>
@@ -58,7 +48,7 @@ document.addEventListener("DOMContentLoaded", function () {
             <option value="3">Haute</option>
         </select>
         <select id="todoCategorie"></select>
-        <button type="submit">Add Todo</button>
+        <button type="submit">Créer le Todo</button>
     `;
     mainContainer.appendChild(todoForm);
 
@@ -66,9 +56,9 @@ document.addEventListener("DOMContentLoaded", function () {
     todoEditForm.id = 'todoEditForm';
     todoEditForm.style.display = 'none';
     todoEditForm.innerHTML = `
-        <input type="text" id="todoEditTitle" placeholder="Title">
+        <input type="text" id="todoEditTitle" placeholder="Titre">
         <input type="text" id="todoEditDescription" placeholder="Description">
-        <input type="date" id="todoEditDueDate" placeholder="Due Date">
+        <input type="date" id="todoEditDueDate" placeholder="Date échéance">
         <select id="todoEditStatus">
             <option value="1">Créé</option>
             <option value="2">En cours</option>
@@ -80,20 +70,23 @@ document.addEventListener("DOMContentLoaded", function () {
             <option value="3">Haute</option>
         </select>
         <select id="todoEditCategorie"></select>
-        <button type="submit">Save Changes</button>
-        <button type="button" id="cancelEditButton">Cancel</button>
+        <button type="submit">Sauvegarder</button>
+        <button type="button" id="cancelEditButton">Annuler</button>
     `;
     mainContainer.appendChild(todoEditForm);
+
+    const modificationsSection = document.createElement('div');
+    modificationsSection.id = 'modifications';
+    modificationsSection.innerHTML = `
+        <h3>Modification(s)</h3>
+        <ul id="modifications-list"></ul>
+    `;
+    todoEditForm.appendChild(modificationsSection);
 
     const adminPanel = document.createElement('div');
     adminPanel.id = 'adminPanel';
     adminPanel.style.display = 'none';
-    
-    const toggleAdminButton = document.createElement('button');
-    toggleAdminButton.id = 'toggleAdminButton';
-    toggleAdminButton.textContent = 'Afficher le menu Admin';
     mainContainer.appendChild(adminPanel);
-    mainContainer.appendChild(toggleAdminButton);
 
     const adminSectionContainer = document.createElement('div');
     adminSectionContainer.classList.add('admin-section-container');
@@ -102,46 +95,32 @@ document.addEventListener("DOMContentLoaded", function () {
     const userManagement = document.createElement('div');
     userManagement.classList.add('admin-section');
     userManagement.innerHTML = `
-        <h3>Manage Users</h3>
-        <button id="listUsersButton">List Users</button>
+        <h3>Gérer les Utilisateurs</h3>
+        <button id="listUsersButton">Afficher les utilisateurs</button>
         <div id="userList"></div>
-        <h4>Create User</h4>
+        <h4>ajouter l'utilisateur</h4>
         <form id="createUserForm">
             <input type="text" id="createUserUtilisateur" placeholder="Utilisateur" required>
-            <input type="password" id="createUserPassword" placeholder="Password" required>
+            <input type="password" id="createUserPassword" placeholder="Mot de passe" required>
             <select id="createUserRole">
                 <option value="user">User</option>
                 <option value="admin">Admin</option>
             </select>
-            <button type="submit">Create User</button>
+            <button type="submit">Ajouter l'utilisateur</button>
         </form>
     `;
     adminSectionContainer.appendChild(userManagement);
 
-    const statusManagement = document.createElement('div');
-    statusManagement.classList.add('admin-section');
-    statusManagement.innerHTML = `
-        <h3>Manage Statuses</h3>
-        <button id="listStatusesButton">List Statuses</button>
-        <div id="statusList"></div>
-        <h4>Create Status</h4>
-        <form id="createStatusForm">
-            <input type="text" id="createStatusName" placeholder="Status Name">
-            <button type="submit">Create Status</button>
-        </form>
-    `;
-    adminSectionContainer.appendChild(statusManagement);
-
     const categoriesManagement = document.createElement('div');
     categoriesManagement.classList.add('admin-section');
     categoriesManagement.innerHTML = `
-        <h3>Manage Categories</h3>
-        <button id="listCategoriesButton">List Categories</button>
+        <h3>Gérer les Categories</h3>
+        <button id="listCategoriesButton">Afficher les Categories</button>
         <div id="categoriesList"></div>
-        <h4>Create Categorie</h4>
+        <h4>Créer une Categorie</h4>
         <form id="createCategoriesForm">
-            <input type="text" id="createCategorieName" placeholder="Categorie Name">
-            <button type="submit">Create Categorie</button>
+            <input type="text" id="createCategorieName" placeholder="Nom de la Categorie">
+            <button type="submit">Créer la Categorie</button>
         </form>
     `;
     adminSectionContainer.appendChild(categoriesManagement);
@@ -149,30 +128,20 @@ document.addEventListener("DOMContentLoaded", function () {
     const deletedTodosManagement = document.createElement('div');
     deletedTodosManagement.classList.add('admin-section');
     deletedTodosManagement.innerHTML = `
-        <h3>Manage Deleted Todos</h3>
-        <button id="listDeletedTodosButton">List Deleted Todos</button>
+        <h3>Gérer les Todos supprimés</h3>
+        <button id="listDeletedTodosButton">Afficher les Todos supprimés</button>
         <div id="deletedTodoList"></div>
     `;
     adminSectionContainer.appendChild(deletedTodosManagement);
 
-    // Ajout de l'événement pour basculer la visibilité du panneau admin
-    toggleAdminButton.addEventListener('click', function () {
-        if (adminPanel.style.display === 'none') {
-            adminPanel.style.display = 'block';
-        } else {
-            adminPanel.style.display = 'none';
-        }
-    });
-
-    // Références aux éléments dynamiques
     const loginError = document.getElementById('loginError');
-    const registerError = document.getElementById('registerError');
     const todoTitle = document.getElementById('todoTitle');
     const todoDescription = document.getElementById('todoDescription');
     const todoDueDate = document.getElementById('todoDueDate');
     const todoStatus = document.getElementById('todoStatus');
     const todoPriority = document.getElementById('todoPriority');
     const todoCategorie = document.getElementById('todoCategorie');
+    const todoEditId = document.getElementById('todoEditId');
     const todoEditTitle = document.getElementById('todoEditTitle');
     const todoEditDescription = document.getElementById('todoEditDescription');
     const todoEditDueDate = document.getElementById('todoEditDueDate');
@@ -185,10 +154,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const createUserUtilisateur = document.getElementById('createUserUtilisateur');
     const createUserPassword = document.getElementById('createUserPassword');
     const createUserRole = document.getElementById('createUserRole');
-    const listStatusesButton = document.getElementById('listStatusesButton');
-    const statusList = document.getElementById('statusList');
-    const createStatusForm = document.getElementById('createStatusForm');
-    const createStatusName = document.getElementById('createStatusName');
     const listCategoriesButton = document.getElementById('listCategoriesButton');
     const categoriesList = document.getElementById('categoriesList');
     const createCategoriesForm = document.getElementById('createCategoriesForm');
@@ -199,7 +164,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function showLoginForm() {
         loginForm.style.display = 'block';
-        registerForm.style.display = 'block';
         logoutButton.style.display = 'none';
         todoForm.style.display = 'none';
         adminPanel.style.display = 'none';
@@ -208,7 +172,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function showLogoutButton() {
         loginForm.style.display = 'none';
-        registerForm.style.display = 'none';
         logoutButton.style.display = 'block';
         todoForm.style.display = 'block';
     }
@@ -217,40 +180,6 @@ document.addEventListener("DOMContentLoaded", function () {
         adminPanel.style.display = 'block';
     }
 
-    registerForm.addEventListener('submit', function (event) {
-        event.preventDefault();
-
-        const utilisateur = document.getElementById('registerUtilisateur').value;
-        const password = document.getElementById('registerPassword').value;
-
-        const requestData = { utilisateur, password };
-        console.log('Sending register data:', requestData);
-
-        fetch('controllers/RegisterController.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(requestData)
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.success) {
-                registerForm.style.display = 'none';
-            } else {
-                registerError.textContent = data.error;
-            }
-        })
-        .catch(error => {
-            console.error('Error during registration:', error);
-        });
-    });
-
     loginForm.addEventListener('submit', function (event) {
         event.preventDefault();
 
@@ -258,7 +187,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const password = document.getElementById('loginPassword').value;
 
         const requestData = { utilisateur, password };
-        console.log('Sending login data:', requestData);
 
         fetch('controllers/LoginPostController.php', {
             method: 'POST',
@@ -267,29 +195,29 @@ document.addEventListener("DOMContentLoaded", function () {
             },
             body: JSON.stringify(requestData)
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.success) {
-                localStorage.setItem('userId', data.userId);
-                localStorage.setItem('userRole', data.role);
-                showLogoutButton();
-                fetchTodos(data.userId);
-                if (data.role === 'admin') {
-                    showAdminPanel();
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
                 }
-            } else {
-                loginError.textContent = data.error;
-            }
-        })
-        .catch(error => {
-            console.error('Error during login:', error);
-            loginError.textContent = 'Network error';
-        });
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    localStorage.setItem('userId', data.userId);
+                    localStorage.setItem('userRole', data.role);
+                    showLogoutButton();
+                    fetchTodos(data.userId);
+                    if (data.role === 'admin') {
+                        showAdminPanel();
+                    }
+                } else {
+                    loginError.textContent = data.error;
+                }
+            })
+            .catch(error => {
+                console.error('Erreur lors de la connexion:', error);
+                loginError.textContent = 'Network error';
+            });
     });
 
     function getUserId() {
@@ -331,29 +259,29 @@ document.addEventListener("DOMContentLoaded", function () {
             },
             body: JSON.stringify(requestData)
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.success) {
-                const userId = localStorage.getItem('userId');
-                fetchTodos(userId);
-                todoTitle.value = '';
-                todoDescription.value = '';
-                todoDueDate.value = '';
-                todoStatus.value = '';
-                todoPriority.value = '';
-                todoCategorie.value = '';
-            } else {
-                console.error('Error adding todo:', data.error);
-            }
-        })
-        .catch(error => {
-            console.error('Error adding todo:', error);
-        });
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    const userId = localStorage.getItem('userId');
+                    fetchTodos(userId);
+                    todoTitle.value = '';
+                    todoDescription.value = '';
+                    todoDueDate.value = '';
+                    todoStatus.value = '';
+                    todoPriority.value = '';
+                    todoCategorie.value = '';
+                } else {
+                    console.error('Erreur ajout Todo:', data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Erreur ajout Todo:', error);
+            });
     });
 
     // Afficher les utilisateurs (ADMIN)
@@ -365,28 +293,27 @@ document.addEventListener("DOMContentLoaded", function () {
             },
             body: JSON.stringify({ action: 'list_users' })
         })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Data received from API for users:', data); // Log the received data
-            userList.innerHTML = '';
-            if (!Array.isArray(data)) {
-                console.error('Error: Expected an array but received:', data);
-                return;
-            }
-            data.forEach(user => {
-                const userItem = document.createElement('div');
-                userItem.textContent = `${user.utilisateur} ${user.mot_de_passe} (${user.role})`;
+            .then(response => response.json())
+            .then(data => {
+                userList.innerHTML = '';
+                if (!Array.isArray(data)) {
+                    console.error('Erreur des datas:', data);
+                    return;
+                }
+                data.forEach(user => {
+                    const userItem = document.createElement('div');
+                    userItem.textContent = `${user.utilisateur} ${user.mot_de_passe} (${user.role})`;
 
-                const deleteButton = document.createElement('button');
-                deleteButton.textContent = 'Supprimer';
-                deleteButton.addEventListener('click', function () {
-                    deleteUserAdmin(user.id_utilisateur);
+                    const deleteButton = document.createElement('button');
+                    deleteButton.textContent = 'Supprimer';
+                    deleteButton.addEventListener('click', function () {
+                        deleteUserAdmin(user.id_utilisateur);
+                    });
+                    userItem.appendChild(deleteButton);
+                    userList.appendChild(userItem);
                 });
-                userItem.appendChild(deleteButton);
-                userList.appendChild(userItem);
-            });
-        })
-        .catch(error => console.error('Error listing users:', error));
+            })
+            .catch(error => console.error('Erreur affichage Utilisateurs:', error));
     });
 
     createUserForm.addEventListener('submit', function (event) {
@@ -404,69 +331,22 @@ document.addEventListener("DOMContentLoaded", function () {
             },
             body: JSON.stringify(requestData)
         })
-        .then(response => response.text())
-        .then(text => {
-            console.log('Raw response from API:', text);
-            try {
-                const data = JSON.parse(text);
-                console.log('Parsed JSON data:', data);
-                if (data.success) {
-                    console.log('User created successfully');
-                    // Optionally refresh the user list
-                    listUsersButton.click();
-                } else {
-                    console.error('Error creating user:', data.error);
+            .then(response => response.text())
+            .then(text => {
+                try {
+                    const data = JSON.parse(text);
+                    console.log('Parsed JSON data:', data);
+                    if (data.success) {
+                        console.log('Utilisateur créé');
+                        listUsersButton.click();
+                    } else {
+                        console.error('Erreur création Utilisateur:', data.error);
+                    }
+                } catch (e) {
+                    console.error('Erreur parsing JSON:', e);
                 }
-            } catch (e) {
-                console.error('Error parsing JSON:', e);
-            }
-        })
-        .catch(error => console.error('Error creating user:', error));
-    });
-
-    listStatusesButton.addEventListener('click', function () {
-        fetch('controllers/AdminController.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ action: 'list_status' })
-        })
-        .then(response => response.json())
-        .then(data => {
-            statusList.innerHTML = '';
-            data.forEach(status => {
-                const statusItem = document.createElement('div');
-                statusItem.textContent = `${status.id_statut} - ${status.libelle}`;
-                statusList.appendChild(statusItem);
-            });
-        })
-        .catch(error => console.error('Error listing statuses:', error));
-    });
-
-    createStatusForm.addEventListener('submit', function (event) {
-        event.preventDefault();
-
-        const name = createStatusName.value;
-
-        const requestData = { action: 'create_statut', name };
-        fetch('controllers/StatutPostController.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(requestData)
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                createStatusName.value = '';
-                listStatusesButton.click();
-            } else {
-                console.error('Error creating status:', data.error);
-            }
-        })
-        .catch(error => console.error('Error creating status:', error));
+            })
+            .catch(error => console.error('Erreur creation Utilisateur:', error));
     });
 
     // Bouton et champs de texte pour les catégories
@@ -478,23 +358,23 @@ document.addEventListener("DOMContentLoaded", function () {
             },
             body: JSON.stringify({ action: 'list_categories' })
         })
-        .then(response => response.json())
-        .then(data => {
-            categoriesList.innerHTML = '';
-            data.forEach(categories => {
-                const categoriesItem = document.createElement('div');
-                categoriesItem.textContent = `${categories.id_categorie} - ${categories.libelle}`;
+            .then(response => response.json())
+            .then(data => {
+                categoriesList.innerHTML = '';
+                data.forEach(categories => {
+                    const categoriesItem = document.createElement('div');
+                    categoriesItem.textContent = `${categories.id_categorie} - ${categories.libelle}`;
 
-                const deleteButton = document.createElement('button');
-                deleteButton.textContent = 'Supprimer';
-                deleteButton.addEventListener('click', function () {
-                    deleteCategorieAdmin(categories.id_categorie);
+                    const deleteButton = document.createElement('button');
+                    deleteButton.textContent = 'Supprimer';
+                    deleteButton.addEventListener('click', function () {
+                        deleteCategorieAdmin(categories.id_categorie);
+                    });
+                    categoriesItem.appendChild(deleteButton);
+                    categoriesList.appendChild(categoriesItem);
                 });
-                categoriesItem.appendChild(deleteButton);
-                categoriesList.appendChild(categoriesItem);
-            });
-        })
-        .catch(error => console.error('Error listing categories:', error));
+            })
+            .catch(error => console.error('Error affichage Categories:', error));
     });
 
     createCategoriesForm.addEventListener('submit', function (event) {
@@ -510,60 +390,62 @@ document.addEventListener("DOMContentLoaded", function () {
             },
             body: JSON.stringify(requestData)
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                createCategorieName.value = '';
-                listCategoriesButton.click();
-            } else {
-                console.error('Error creating categorie:', data.error);
-            }
-        })
-        .catch(error => console.error('Error creating categories:', error));
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    createCategorieName.value = '';
+                    listCategoriesButton.click();
+                } else {
+                    console.error('Erreur creation Categorie:', data.error);
+                }
+            })
+            .catch(error => console.error('Erreur creation Categorie:', error));
     });
 
     // Affiche les différentes catégories lors de la création d'un todo (todoCategorie)
     function RecupCategories() {
         fetch('controllers/CategorieGetController.php')
-        .then(response => response.json())
-        .then(data => {
-            todoCategorie.innerHTML = ''; // Clear previous options
-            todoEditCategorie.innerHTML = ''; // Clear previous options
-            data.forEach(item => {
-                const option = document.createElement('option');
-                option.value = item.id_categorie;
-                option.textContent = item.libelle;
-                todoCategorie.appendChild(option.cloneNode(true)); // Append to todoCategorie
-                todoEditCategorie.appendChild(option); // Append to todoEditCategorie
+            .then(response => response.json())
+            .then(data => {
+                todoCategorie.innerHTML = '';
+                todoEditCategorie.innerHTML = '';
+                data.forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item.id_categorie;
+                    option.textContent = item.libelle;
+                    todoCategorie.appendChild(option.cloneNode(true));
+                    todoEditCategorie.appendChild(option);
+                });
             });
-        });
     }
 
     listDeletedTodosButton.addEventListener('click', function () {
         fetch('controllers/TodoGetController.php?action=fetch_deleted')
-        .then(response => response.json())
-        .then(data => {
-            deletedTodoList.innerHTML = ''; // Clear the list
-            const table = document.createElement('table');
-            table.innerHTML = `
+            .then(response => response.json())
+            .then(data => {
+                deletedTodoList.innerHTML = '';
+                const table = document.createElement('table');
+                table.innerHTML = `
                 <thead>
                     <tr>
-                        <th>Title</th>
+                        <th>Utilisateur</th>
+                        <th>Titre</th>
                         <th>Description</th>
-                        <th>Created</th>
-                        <th>Due Date</th>
+                        <th>Date création</th>
+                        <th>Date échéance</th>
                         <th>Status</th>
-                        <th>Priority</th>
-                        <th>Category</th>
+                        <th>Priorité</th>
+                        <th>Categorie</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody></tbody>
             `;
-            const tbody = table.querySelector('tbody');
-            data.forEach(item => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
+                const tbody = table.querySelector('tbody');
+                data.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                    <td>${item.libelle_utilisateur}</td>
                     <td>${item.titre}</td>
                     <td>${item.description}</td>
                     <td>${item.date_creation}</td>
@@ -572,56 +454,55 @@ document.addEventListener("DOMContentLoaded", function () {
                     <td>${item.libelle_priorite}</td>
                     <td>${item.libelle_categorie}</td>
                     <td>
-                        <button class="restore-button">Restore</button>
+                        <button class="restore-button">Restaurer</button>
                     </td>
                 `;
-                row.querySelector('.restore-button').addEventListener('click', function () {
-                    restoreTodoAdmin(item.id_todo);
+                    row.querySelector('.restore-button').addEventListener('click', function () {
+                        restoreTodoAdmin(item.id_todo);
+                    });
+                    tbody.appendChild(row);
                 });
-                tbody.appendChild(row);
-            });
-            deletedTodoList.appendChild(table);
-        })
-        .catch(error => console.error('Error listing deleted todos:', error));
+                deletedTodoList.appendChild(table);
+            })
+            .catch(error => console.error('Erreur affichage Todo supprimés:', error));
     });
 
     function fetchTodos(userId) {
         fetch(`controllers/TodoGetController.php?userId=${userId}`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Data received from API:', data);
-            todoList.innerHTML = ''; // Clear the list
-            if (data.error) {
-                const errorItem = document.createElement('div');
-                errorItem.textContent = 'Error: ' + data.error;
-                todoList.appendChild(errorItem);
-            } else {
-                const table = document.createElement('table');
-                table.innerHTML = `
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                todoList.innerHTML = '';
+                if (data.error) {
+                    const errorItem = document.createElement('div');
+                    errorItem.textContent = 'Error: ' + data.error;
+                    todoList.appendChild(errorItem);
+                } else {
+                    const table = document.createElement('table');
+                    table.innerHTML = `
                     <thead>
                         <tr>
-                            <th>Title</th>
+                            <th>Titre</th>
                             <th>Description</th>
-                            <th>Created</th>
-                            <th>Due Date</th>
+                            <th>Date création</th>
+                            <th>Date échéance</th>
                             <th>Status</th>
-                            <th>Priority</th>
-                            <th>Category</th>
+                            <th>Priorité</th>
+                            <th>Categorie</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
                 `;
-                const tbody = table.querySelector('tbody');
-                data.forEach(item => {
-                    if (item.id_statut != 4) {
-                        const row = document.createElement('tr');
-                        row.innerHTML = `
+                    const tbody = table.querySelector('tbody');
+                    data.forEach(item => {
+                        if (item.id_statut != 4) {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
                             <td>${item.titre}</td>
                             <td>${item.description}</td>
                             <td>${item.date_creation}</td>
@@ -630,36 +511,36 @@ document.addEventListener("DOMContentLoaded", function () {
                             <td>${item.libelle_priorite}</td>
                             <td>${item.libelle_categorie}</td>
                             <td>
-                                <button class="edit-button">Edit</button>
-                                <button class="delete-button">Delete</button>
+                                <button class="edit-button">Editer</button>
+                                <button class="delete-button">Supprimer</button>
                             </td>
                         `;
-                        row.querySelector('.edit-button').addEventListener('click', function () {
-                            editTodo(
-                                item.id_todo,
-                                item.titre,
-                                item.description,
-                                item.date_echeance,
-                                item.id_statut,
-                                item.id_priorite,
-                                item.id_categorie
-                            );
-                        });
-                        row.querySelector('.delete-button').addEventListener('click', function () {
-                            deleteTodo(item.id_todo);
-                        });
-                        tbody.appendChild(row);
-                    }
-                });
-                todoList.appendChild(table);
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching todo list:', error);
-            const errorItem = document.createElement('div');
-            errorItem.textContent = 'Error: ' + error.message;
-            todoList.appendChild(errorItem);
-        });
+                            row.querySelector('.edit-button').addEventListener('click', function () {
+                                editTodo(
+                                    item.id_todo,
+                                    item.titre,
+                                    item.description,
+                                    item.date_echeance,
+                                    item.id_statut,
+                                    item.id_priorite,
+                                    item.id_categorie
+                                );
+                            });
+                            row.querySelector('.delete-button').addEventListener('click', function () {
+                                deleteTodo(item.id_todo);
+                            });
+                            tbody.appendChild(row);
+                        }
+                    });
+                    todoList.appendChild(table);
+                }
+            })
+            .catch(error => {
+                console.error('Erreur affichage Todo list:', error);
+                const errorItem = document.createElement('div');
+                errorItem.textContent = 'Erreur: ' + error.message;
+                todoList.appendChild(errorItem);
+            });
     }
 
     function editTodo(todoId, currentTitle, currentDescription, currentDueDate, currentStatus, currentPriority, currentCategorie) {
@@ -672,6 +553,27 @@ document.addEventListener("DOMContentLoaded", function () {
 
         todoEditForm.style.display = 'block';
         todoForm.style.display = 'none';
+
+        fetch(`controllers/ModificationGetController.php?action=fetch_modifications&todoId=${todoId}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (!Array.isArray(data)) {
+                    throw new Error('Erreur ' + typeof data);
+                }
+                const modificationsList = document.getElementById('modifications-list');
+                modificationsList.innerHTML = '';
+                data.forEach(modifications => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `${modifications.date_modification}: ${modifications.raison_modification}`;
+                    modificationsList.appendChild(listItem);
+                });
+            })
+            .catch(error => console.error('Erreur affichage Modifications:', error));
 
         todoEditForm.onsubmit = function (event) {
             event.preventDefault();
@@ -692,24 +594,49 @@ document.addEventListener("DOMContentLoaded", function () {
                 },
                 body: JSON.stringify(requestData)
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    const userId = localStorage.getItem('userId');
-                    fetchTodos(userId);
-                    todoEditForm.style.display = 'none';
-                    todoForm.style.display = 'block';
-                } else {
-                    console.error('Error editing todo:', data.error);
-                }
-            })
-            .catch(error => console.error('Error editing todo:', error));
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const userId = localStorage.getItem('userId');
+                        fetchTodos(userId);
+                        todoEditForm.style.display = 'none';
+                        todoForm.style.display = 'block';
+
+                        //Demander la raison de la modif
+                        const raison = prompt('Veuillez indiquer la raison de la modification')
+                        addRaisonModif(todoId, raison);
+                    } else {
+                        console.error('Erreur lors de l\'edit du Todo:', data.error);
+                    }
+                })
+                .catch(error => console.error('Erreur lors de l\'edit du Todo:', error));
         };
 
         cancelEditButton.onclick = function () {
             todoEditForm.style.display = 'none';
             todoForm.style.display = 'block';
         };
+    }
+
+    function addRaisonModif(todoId, raison) {
+        const requestDataRaisonModif = { action: 'raison_modif', raison, todoId };
+
+        fetch('controllers/ModificationPostController.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestDataRaisonModif)
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const userId = localStorage.getItem('userId');
+                    fetchTodos(userId);
+                } else {
+                    console.error('Erreur lors de add modif:', data.error);                }
+            })
+            .catch(error => console.error('Erreur lors de add modif:', error));
     }
 
     function deleteTodo(todoId) {
@@ -721,16 +648,16 @@ document.addEventListener("DOMContentLoaded", function () {
             },
             body: JSON.stringify(requestData)
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                const userId = localStorage.getItem('userId');
-                fetchTodos(userId);
-            } else {
-                console.error('Error deleting todo:', data.error);
-            }
-        })
-        .catch(error => console.error('Error deleting todo:', error));
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const userId = localStorage.getItem('userId');
+                    fetchTodos(userId);
+                } else {
+                    console.error('Erreur suppression Todo:', data.error);
+                }
+            })
+            .catch(error => console.error('Erreur suppression Todo:', error));
     }
 
     function restoreTodoAdmin(todoId) {
@@ -742,17 +669,17 @@ document.addEventListener("DOMContentLoaded", function () {
             },
             body: JSON.stringify(requestData)
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                const userId = localStorage.getItem('userId');
-                fetchTodos(userId); // Refresh the active todos list
-                listDeletedTodosButton.click(); // Refresh the deleted todos list
-            } else {
-                console.error('Error restoring todo:', data.error);
-            }
-        })
-        .catch(error => console.error('Error restoring todo:', error));
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const userId = localStorage.getItem('userId');
+                    fetchTodos(userId);
+                    listDeletedTodosButton.click();
+                } else {
+                    console.error('Erreur lors de la restauration du Todo:', data.error);
+                }
+            })
+            .catch(error => console.error('Erreur lors de la restauration du Todo:', error));
     }
 
     function deleteCategorieAdmin(categorieId) {
@@ -764,15 +691,15 @@ document.addEventListener("DOMContentLoaded", function () {
             },
             body: JSON.stringify(requestData)
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                listCategoriesButton.click();
-            } else {
-                console.error('Erreur lors de la suppression de la catégorie: ', data.error);
-            }
-        })
-        .catch(error => console.error('Erreur lors de la suppression de la catégorie: ', error));
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    listCategoriesButton.click();
+                } else {
+                    console.error('Erreur lors de la suppression de la Catégorie: ', data.error);
+                }
+            })
+            .catch(error => console.error('Erreur lors de la suppression de la Catégorie: ', error));
     }
 
     function deleteUserAdmin(userId) {
@@ -784,15 +711,15 @@ document.addEventListener("DOMContentLoaded", function () {
             },
             body: JSON.stringify(requestData)
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                listUsersButton.click();
-            } else {
-                console.error('Erreur lors de la suppression de l\'utilisateur: ', data.error);
-            }
-        })
-        .catch(error => console.error('Erreur lors de la suppression de l\'utilisateur: ', error));
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    listUsersButton.click();
+                } else {
+                    console.error('Erreur lors de la suppression de l\'utilisateur: ', data.error);
+                }
+            })
+            .catch(error => console.error('Erreur lors de la suppression de l\'utilisateur: ', error));
     }
 
     RecupCategories();

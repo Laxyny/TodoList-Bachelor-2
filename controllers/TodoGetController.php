@@ -1,5 +1,5 @@
 <?php
-define('ROOT', dirname(__DIR__)); // Définir la constante ROOT pour qu'elle pointe vers le répertoire racine
+define('ROOT', dirname(__DIR__));
 
 require(ROOT . '/utils/AbstractController.php');
 require(ROOT . '/service/TodoService.php');
@@ -32,7 +32,6 @@ class TodoGetController extends AbstractController {
         if ($action === 'fetch_deleted') {
             try {
                 $this->todos = $this->service->fetchDeletedTodos();
-                error_log('Deleted todos fetched: ' . print_r($this->todos, true));
             } catch (Exception $e) {
                 echo json_encode(['error' => 'Error fetching deleted todos: ' . $e->getMessage()]);
                 exit();
@@ -40,7 +39,6 @@ class TodoGetController extends AbstractController {
         } else if ($userId) {
             try {
                 $this->todos = $this->service->fetchAllByUser($userId);
-                error_log('Todos fetched: ' . print_r($this->todos, true));
             } catch (Exception $e) {
                 echo json_encode(['error' => 'Error fetching todos: ' . $e->getMessage()]);
                 exit();
@@ -56,7 +54,7 @@ class TodoGetController extends AbstractController {
     }
 }
 
-$form = $_GET; // Ou $_POST selon la méthode de votre formulaire
+$form = $_GET;
 $controller = new TodoGetController($form);
 $controller->processRequest();
 $controller->processResponse();

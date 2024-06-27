@@ -1,5 +1,5 @@
 <?php
-include 'database.php'; // Inclure le fichier de connexion à la base de données
+include 'database.php';
 
 // Vérification de la connexion
 if ($conn->connect_error) {

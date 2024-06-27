@@ -142,3 +142,30 @@ button:hover {
 #adminPanel button:hover {
     background-color: #1A1A1A;
 }
+
+#modifications {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 20px;
+    margin-top: 20px;
+    width: 100%;
+}
+
+#modifications h3 {
+    margin-top: 0;
+    font-family: 'Roboto Mono', monospace;
+}
+
+#modifications-list {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+#modifications-list li {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+}

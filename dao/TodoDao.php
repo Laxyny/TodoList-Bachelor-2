@@ -1,5 +1,5 @@
 <?php
-require_once('../database.php'); // Ajustez le chemin selon votre structure de fichiers
+require_once('../database.php');
 require_once('../model/Todo.php');
 
 class TodoDao {
@@ -12,14 +12,12 @@ class TodoDao {
     public function fetchAll() {
         $stmt = $this->conn->prepare("SELECT id_todo, titre, description, date_creation, date_echeance, id_statut, id_priorite, id_categorie, id_utilisateur FROM todo");
         if (!$stmt) {
-            error_log('Error preparing statement: ' . $this->conn->error);
             return [];
         }
         $stmt->execute();
         $result = $stmt->get_result();
         $todos = [];
         while ($row = $result->fetch_assoc()) {
-            error_log('Row data: ' . print_r($row, true)); // Log the row data
             $todo = new Todo(
                 $row['id_todo'],
                 $row['titre'],
@@ -32,16 +30,13 @@ class TodoDao {
                 $row['id_utilisateur']
             );
             $todos[] = $todo;
-            error_log('Todo object created: ' . print_r($todo, true)); // Log each object
         }
-        error_log('Data fetched from database: ' . print_r($todos, true)); // Log the fetched data
         return $todos;
     }
 
     public function fetch($id) {
         $stmt = $this->conn->prepare("SELECT id_todo, titre, description, date_creation, date_echeance, id_statut, id_priorite, id_categorie, id_utilisateur FROM todo WHERE id_utilisateur = ?");
         if (!$stmt) {
-            error_log('Error preparing statement: ' . $this->conn->error);
             return [];
         }
         $stmt->bind_param("i", $id);
@@ -49,7 +44,6 @@ class TodoDao {
         $result = $stmt->get_result();
         $todos = [];
         while ($row = $result->fetch_assoc()) {
-            error_log('Row data: ' . print_r($row, true)); // Log the row data
             $todo = new Todo(
                 $row['id_todo'],
                 $row['titre'],
@@ -62,9 +56,7 @@ class TodoDao {
                 $row['id_utilisateur']
             );
             $todos[] = $todo;
-            error_log('Todo object created: ' . print_r($todo, true)); // Log each object
         }
-        error_log('Data fetched from database for user: ' . print_r($todos, true)); // Log the fetched data
         return $todos;
     }
 
@@ -78,7 +70,6 @@ class TodoDao {
             WHERE id_utilisateur = ?
         ");
         if (!$stmt) {
-            error_log('Error preparing statement: ' . $this->conn->error);
             return [];
         }
         $stmt->bind_param("i", $userId);
@@ -95,7 +86,6 @@ class TodoDao {
     public function fetchAllWithDeleted($userId) {
         $stmt = $this->conn->prepare("SELECT id_todo, titre, description, date_creation, date_echeance, id_statut, id_priorite, id_categorie, id_utilisateur FROM todo WHERE id_utilisateur = ?");
         if (!$stmt) {
-            error_log('Error preparing statement: ' . $this->conn->error);
             return [];
         }
         $stmt->bind_param("i", $userId);
@@ -120,15 +110,15 @@ class TodoDao {
 
     public function fetchDeletedTodos() {
         $stmt = $this->conn->prepare("
-            SELECT todo.*, statut.libelle as libelle_statut, priorites.libelle as libelle_priorite, categories.libelle as libelle_categorie 
+            SELECT todo.*, utilisateurs.utilisateur as libelle_utilisateur, statut.libelle as libelle_statut, priorites.libelle as libelle_priorite, categories.libelle as libelle_categorie 
             FROM todo 
+            JOIN utilisateurs ON todo.id_utilisateur = utilisateurs.id_utilisateur 
             JOIN statut ON todo.id_statut = statut.id_statut 
             JOIN priorites ON todo.id_priorite = priorites.id_priorite 
             JOIN categories ON todo.id_categorie = categories.id_categorie 
             WHERE todo.id_statut = 4
         ");
         if (!$stmt) {
-            error_log('Error preparing statement: ' . $this->conn->error);
             return [];
         }
         $stmt->execute();
@@ -143,13 +133,11 @@ class TodoDao {
     public function insert($titre, $description, $date_creation, $date_echeance, $id_statut, $id_priorite, $id_categorie, $id_utilisateur) {
         $stmt = $this->conn->prepare("INSERT INTO todo (titre, description, date_creation, date_echeance, id_statut, id_priorite, id_categorie, id_utilisateur) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
         if (!$stmt) {
-            error_log('Error preparing statement: ' . $this->conn->error);
             return ['success' => false, 'error' => $this->conn->error];
         }
         $stmt->bind_param("ssssiiii", $titre, $description, $date_creation, $date_echeance, $id_statut, $id_priorite, $id_categorie, $id_utilisateur);
         $result = $stmt->execute();
         if (!$result) {
-            error_log('Error executing statement: ' . $stmt->error);
             return ['success' => false, 'error' => $stmt->error];
         }
         return ['success' => true];
@@ -159,7 +147,6 @@ class TodoDao {
     public function editStatus($id, $newTitle, $newDescription, $newDueDate, $newStatus, $newPriority, $newCategorie) {
         $stmt = $this->conn->prepare("UPDATE todo SET titre = ?, description = ?, date_echeance = ?, id_statut = ?, id_priorite = ?, id_categorie = ? WHERE id_todo = ?");
         if (!$stmt) {
-            error_log('Error preparing statement: ' . $this->conn->error);
             return ['success' => false, 'error' => $this->conn->error];
         }
         $stmt->bind_param("sssiiii", $newTitle, $newDescription, $newDueDate, $newStatus, $newPriority, $newCategorie, $id);
@@ -169,7 +156,6 @@ class TodoDao {
     public function delete($id) {
         $stmt = $this->conn->prepare("UPDATE todo SET id_statut = 4 WHERE id_todo = ?");
         if (!$stmt) {
-            error_log('Error preparing statement: ' . $this->conn->error);
             return ['success' => false, 'error' => $this->conn->error];
         }
         $stmt->bind_param("i", $id);
@@ -179,7 +165,6 @@ class TodoDao {
     public function restore($id) {
         $stmt = $this->conn->prepare("UPDATE todo SET id_statut = 2 WHERE id_todo = ?");
         if (!$stmt) {
-            error_log('Error preparing statement: ' . $this->conn->error);
             return ['success' => false, 'error' => $this->conn->error];
         }
         $stmt->bind_param("i", $id);

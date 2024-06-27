@@ -28,19 +28,19 @@ class StatutGetController extends AbstractController {
     public function processRequest() {
         try {
             $this->statuts = $this->service->fetchAll();
-            error_log('Statuts fetched: ' . print_r($this->statuts, true)); // Log the fetched statuts
+            error_log('Statuts fetched: ' . print_r($this->statuts, true));
         } catch (Exception $e) {
             echo json_encode(['error' => 'Error fetching statuts: ' . $e->getMessage()]);
             exit();
         }
     }
 
-    public function processResponse() { // Changer en public
+    public function processResponse() {
         echo json_encode($this->statuts);
     }
 }
 
-$form = $_GET; // Ou $_POST selon la méthode de votre formulaire
+$form = $_GET;
 $controller = new StatutGetController($form);
 $controller->processRequest();
 $controller->processResponse();

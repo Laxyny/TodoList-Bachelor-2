@@ -31,7 +31,7 @@ class RegisterController extends AbstractController {
         $utilisateur = $this->form['utilisateur'] ?? '';
         $password = $this->form['password'] ?? '';
         if (empty($utilisateur) || empty($password)) {
-            $this->response = ['success' => false, 'error' => 'Utilisateur and password are required'];
+            $this->response = ['success' => false, 'error' => 'L\'utilisateur et le mot de passe est requis'];
             return;
         }
 

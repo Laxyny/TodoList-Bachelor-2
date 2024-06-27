@@ -1,5 +1,4 @@
 <?php
-// Inclusion du fichier database.php pour utiliser les fonctions de la base de données
 include 'database.php';
 
 define("ROOT", dirname(__FILE__)); // va nous servir de racine pour le chargement des fichiers

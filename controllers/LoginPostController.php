@@ -42,7 +42,7 @@ class LoginPostController extends AbstractController {
         error_log("Utilisateur: $utilisateur, Password: $password");
     
         if (empty($utilisateur) || empty($password)) {
-            $this->response = ['success' => false, 'error' => 'Utilisateur and password are required'];
+            $this->response = ['success' => false, 'error' => 'L\'utilisateur et le mot de passe est requis'];
             return;
         }
     
@@ -52,7 +52,7 @@ class LoginPostController extends AbstractController {
             $_SESSION['role'] = $user->role;
             $this->response = ['success' => true, 'userId' => $user->id_utilisateur, 'role' => $user->role];
         } else {
-            $this->response = ['success' => false, 'error' => 'Invalid utilisateur or password'];
+            $this->response = ['success' => false, 'error' => 'L\'utilisateur et le mot de passe est requis'];
         }
     }
 

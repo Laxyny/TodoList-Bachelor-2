@@ -43,11 +43,10 @@ class AdminService extends AbstractService implements BaseService {
         $role = $data['role'] ?? 'user';
     
         if (empty($utilisateur) || empty($password)) {
-            return ['success' => false, 'error' => 'Utilisateur and password are required'];
+            return ['success' => false, 'error' => 'L\'utilisateur et le mot de passe est requis'];
         }
     
         $result = $this->utilisateurDao->register($utilisateur, $password, $role);
-        error_log('Create user result: ' . print_r($result, true));
         return $result;
     }
 

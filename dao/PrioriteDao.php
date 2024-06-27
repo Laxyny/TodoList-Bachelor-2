@@ -19,7 +19,6 @@ class PrioriteDao extends AbstractDao implements BaseDao
 	{
 		$stmt = $this->prioriteDao->prepare("SELECT id_priorite, libelle FROM priorites");
 		if (!$stmt) {
-			error_log('Error preparing statement: ' . $this->prioriteDao->error);
 			return [];
 		}
 		$stmt->execute();
@@ -51,7 +50,6 @@ class PrioriteDao extends AbstractDao implements BaseDao
 	public function insert($entity) {
 		$stmt = $this->prioriteDao->prepare("INSERT INTO priorite (libelle) VALUES (?)");
         if (!$stmt) {
-            error_log('Error preparing statement: ' . $this->prioriteDao->error);
             return false;
         }
         $stmt->bind_param("s", $entity);

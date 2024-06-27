@@ -38,7 +38,7 @@
         public function processRequest() {
             try {
                 $this->priorite = $this->service->fetchAll();
-                error_log('Priorites fetched: ' . print_r($this->priorite, true)); // Log the fetched priorites
+                error_log('Priorites fetched: ' . print_r($this->priorite, true));
             } catch (Exception $e) {
                 echo json_encode(['error' => 'Error fetching priorites: ' . $e->getMessage()]);
                 exit();
@@ -50,7 +50,7 @@
         }
     }
     
-    $form = $_GET; // Ou $_POST selon la méthode de votre formulaire
+    $form = $_GET;
     $controller = new PrioriteGetController($form);
     $controller->processRequest();
     $controller->processResponse();

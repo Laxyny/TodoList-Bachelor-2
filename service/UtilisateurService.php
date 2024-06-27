@@ -32,7 +32,6 @@ class UtilisateurService extends AbstractService implements BaseService {
     }
 
     public function login($utilisateur, $password) {
-        error_log("Attempting login for Utilisateur: $utilisateur");
         return $this->utilisateurDao->login($utilisateur, $password);
     }
 

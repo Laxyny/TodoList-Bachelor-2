@@ -1,5 +1,5 @@
 <?php
-require_once('../database.php'); // Ajustez le chemin selon votre structure de fichiers
+require_once('../database.php');
 require_once('../model/Utilisateur.php');
 
 class UtilisateurDao {
@@ -37,7 +37,6 @@ class UtilisateurDao {
         $stmt->execute();
         $result = $stmt->get_result();
         $user = $result->fetch_assoc();
-        error_log("Login query result: " . print_r($user, true));
         if ($user && $user['mot_de_passe'] === $password) {
             return new Utilisateur($user['id_utilisateur'], $user['utilisateur'], $user['mot_de_passe'], $user['role']);
         }
@@ -47,13 +46,11 @@ class UtilisateurDao {
     public function register($utilisateur, $password, $role) {
         $stmt = $this->conn->prepare("INSERT INTO utilisateurs (utilisateur, mot_de_passe, role) VALUES (?, ?, ?)");
         if (!$stmt) {
-            error_log('Error preparing statement: ' . $this->conn->error);
             return ['success' => false, 'error' => $this->conn->error];
         }
         $stmt->bind_param("sss", $utilisateur, $password, $role);
         $result = $stmt->execute();
         if (!$result) {
-            error_log('Error executing statement: ' . $stmt->error);
             return ['success' => false, 'error' => $stmt->error];
         }
         return ['success' => true];

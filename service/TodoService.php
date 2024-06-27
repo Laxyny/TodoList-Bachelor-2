@@ -2,7 +2,7 @@
 require_once(ROOT . '/utils/AbstractService.php');
 require_once(ROOT . '/utils/BaseService.php');
 require_once(ROOT . '/dao/TodoDao.php');
-require_once(ROOT . '/utils/DbSingleton.php'); // Ajout de l'inclusion de DbSingleton
+require_once(ROOT . '/utils/DbSingleton.php');
 
 class TodoService extends AbstractService implements BaseService {
     private $todoDao;
@@ -31,9 +31,7 @@ class TodoService extends AbstractService implements BaseService {
         return $this->todoDao->fetchAllByUser($id);
     }
 
-    public function create($data) {
-        error_log('Create Todo data: ' . print_r($data, true));
-    
+    public function create($data) {    
         $titre = $data['titre'] ?? '';
         $description = $data['description'] ?? '';
         $date_creation = $data['date_creation'] ?? '';

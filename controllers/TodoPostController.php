@@ -1,5 +1,5 @@
 <?php
-define('ROOT', dirname(__DIR__)); // Définir la constante ROOT pour qu'elle pointe vers le répertoire racine
+define('ROOT', dirname(__DIR__));
 
 require(ROOT . '/utils/AbstractController.php');
 require(ROOT . '/service/TodoService.php');
@@ -27,7 +27,6 @@ class TodoPostController extends AbstractController {
 
     public function processRequest() {
         $action = $this->form['action'] ?? '';
-        error_log('TodoPostController action: ' . $action);
 
         switch ($action) {
             case 'create_todo':
@@ -87,13 +86,11 @@ class TodoPostController extends AbstractController {
             default:
                 $this->response = ['success' => false, 'error' => 'Invalid action'];
         }
-        error_log('TodoPostController response: ' . print_r($this->response, true));
     }
 
     public function processResponse() {
         header('Content-Type: application/json');
         $jsonResponse = json_encode($this->response);
-        error_log('TodoPostController JSON response: ' . $jsonResponse);
         echo $jsonResponse;
     }
 }
@@ -101,7 +98,6 @@ class TodoPostController extends AbstractController {
 try {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $form = json_decode(file_get_contents('php://input'), true);
-        error_log("Form data: " . print_r($form, true));
         if (json_last_error() !== JSON_ERROR_NONE) {
             throw new Exception('Invalid JSON input: ' . json_last_error_msg());
         }

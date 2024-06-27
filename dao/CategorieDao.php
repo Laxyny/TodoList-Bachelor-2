@@ -19,19 +19,15 @@ class CategorieDao extends AbstractDao implements BaseDao
 	{
 		$stmt = $this->conn->prepare("SELECT * FROM categories");
 		if (!$stmt) {
-			error_log('Error preparing statement: ' . $this->conn->error);
 			return [];
 		}
 		$stmt->execute();
 		$result = $stmt->get_result();
 		$categories = [];
 		while ($row = $result->fetch_assoc()) {
-			error_log('Row data: ' . print_r($row, true)); // Log the row data
 			$categorie = new Categorie($row['id_categorie'], $row['libelle']);
 			$categories[] = $categorie;
-			error_log('Categorie object created: ' . print_r($categorie, true)); // Log each object
 		}
-		error_log('Data fetched from database: ' . print_r($categories, true)); // Log the fetched data
 		return $categories;
 	}
 
@@ -42,7 +38,6 @@ class CategorieDao extends AbstractDao implements BaseDao
 	public function create($name) {
         $stmt = $this->conn->prepare("INSERT INTO categories (name) VALUES (?)");
         if (!$stmt) {
-            error_log('Error preparing statement: ' . $this->conn->error);
             return ['success' => false, 'error' => $this->conn->error];
         }
         $stmt->bind_param("s", $name);
@@ -52,7 +47,6 @@ class CategorieDao extends AbstractDao implements BaseDao
 	public function insert($entity) {
 		$stmt = $this->conn->prepare("INSERT INTO categories (libelle) VALUES (?)");
         if (!$stmt) {
-            error_log('Error preparing statement: ' . $this->conn->error);
             return false;
         }
         $stmt->bind_param("s", $entity);
@@ -66,7 +60,6 @@ class CategorieDao extends AbstractDao implements BaseDao
 	public function delete($id) {
 		$stmt = $this->conn->prepare("DELETE FROM categories WHERE id_categorie = ?");
 		if (!$stmt) {
-			error_log('Error preparing statement: ' . $this->conn->error);
 			return false;
 		}
 		$stmt->bind_param("i", $id);

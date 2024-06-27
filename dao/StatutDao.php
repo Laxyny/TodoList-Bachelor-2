@@ -19,19 +19,15 @@ class StatutDao extends AbstractDao implements BaseDao
 	{
 		$stmt = $this->conn->prepare("SELECT * FROM statut");
 		if (!$stmt) {
-			error_log('Error preparing statement: ' . $this->conn->error);
 			return [];
 		}
 		$stmt->execute();
 		$result = $stmt->get_result();
 		$statuts = [];
 		while ($row = $result->fetch_assoc()) {
-			error_log('Row data: ' . print_r($row, true)); // Log the row data
 			$statut = new Statut($row['id_statut'], $row['libelle']);
 			$statuts[] = $statut;
-			error_log('Statut object created: ' . print_r($statut, true)); // Log each object
 		}
-		error_log('Data fetched from database: ' . print_r($statuts, true)); // Log the fetched data
 		return $statuts;
 	}
 
@@ -42,7 +38,6 @@ class StatutDao extends AbstractDao implements BaseDao
 	public function create($name) {
         $stmt = $this->conn->prepare("INSERT INTO statuts (name) VALUES (?)");
         if (!$stmt) {
-            error_log('Error preparing statement: ' . $this->conn->error);
             return ['success' => false, 'error' => $this->conn->error];
         }
         $stmt->bind_param("s", $name);
@@ -52,7 +47,6 @@ class StatutDao extends AbstractDao implements BaseDao
 	public function insert($entity) {
 		$stmt = $this->conn->prepare("INSERT INTO statut (libelle) VALUES (?)");
         if (!$stmt) {
-            error_log('Error preparing statement: ' . $this->conn->error);
             return false;
         }
         $stmt->bind_param("s", $entity);
@@ -66,7 +60,6 @@ class StatutDao extends AbstractDao implements BaseDao
 	public function delete($id) {
 		$stmt = $this->conn->prepare("DELETE FROM statuts WHERE id_statut = ?");
         if (!$stmt) {
-            error_log('Error preparing statement: ' . $this->conn->error);
             return ['success' => false, 'error' => $this->conn->error];
         }
         $stmt->bind_param("i", $id);

@@ -28,7 +28,6 @@ class StatutGetController extends AbstractController {
     public function processRequest() {
         try {
             $this->utilisateur = $this->service->fetchAll();
-            error_log('Todos fetched: ' . print_r($this->utilisateur, true)); // Log the fetched todos
         } catch (Exception $e) {
             echo json_encode(['error' => 'Error fetching utilisateurs: ' . $e->getMessage()]);
             exit();
@@ -40,7 +39,7 @@ class StatutGetController extends AbstractController {
     }
 }
 
-$form = $_GET; // Ou $_POST selon la méthode de votre formulaire
+$form = $_GET;
 $controller = new StatutGetController($form);
 $controller->processRequest();
 $controller->processResponse();
