@@ -89,3 +89,8 @@ VALUES
 (1, 'Nourriture'),
 (2, 'Loisirs'),
 (3, 'Travail');
+
+-- Creation d'un utilisateur et mot de passe pour la base de donnée (utilisateur: todo et mot_de_passe: openit)
+CREATE USER 'todo'@'localhost' IDENTIFIED BY 'openit';
+GRANT ALL PRIVILEGES ON `todo_list`.* TO 'todo'@'localhost';
+FLUSH PRIVILEGES;
