@@ -1,4 +1,8 @@
--- SQLBook: Code
+-- Créer la base de donnée (todo_list) et la sélectionner par la suite
+CREATE DATABASE todo_list;
+USE todo_list;
+
+
 -- Création de la table `utilisateurs`
 CREATE TABLE `utilisateurs` (
     `id_utilisateur` INT AUTO_INCREMENT PRIMARY KEY,
@@ -60,7 +64,7 @@ CREATE TABLE `todo` (
 INSERT INTO `todo` (`id_todo`, `titre`, `description`, `date_creation`, `date_echeance`, `id_statut`, `id_priorite`, `id_categorie`, `id_utilisateur`) 
 VALUES 
 (1, 'Acheter du pain', 'Boulangerie', '2024-01-29', '2024-01-30', 1, 1, 1, 1),
-(2, 'Réparer la voiture', 'Garagiste', '2024-05-22', '2024-05-22', 2, 2, 1, 1),
+(2, 'Réparer la moto', 'Garagiste', '2024-05-22', '2024-05-22', 2, 2, 1, 1),
 (3, 'Réparer la voiture', 'Garagiste', '2024-05-22', '2024-05-22', 2, 2, 1, 2);
 
 -- Création de la table `modifications`
@@ -75,7 +79,7 @@ CREATE TABLE `modifications` (
 -- Insertion des données dans la table `modifications`
 INSERT INTO `modifications` (`id_modification`, `date_modification`, `raison_modification`, `id_todo`) 
 VALUES 
-(1, '2024-01-29', 'Modification', 1);
+(1, '2024-01-29', 'Ma modification', 1);
 
 -- Création de la table `categories`
 CREATE TABLE `categories` (

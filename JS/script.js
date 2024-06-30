@@ -250,7 +250,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         const requestData = { action: 'create_todo', titre, description, date_creation, date_echeance, id_statut, id_priorite, id_categorie, id_utilisateur };
-        console.log('Sending todo data:', requestData);
+        console.log('Données du todo:', requestData);
 
         fetch('controllers/TodoPostController.php', {
             method: 'POST',
