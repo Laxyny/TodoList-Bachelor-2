@@ -197,7 +197,7 @@ document.addEventListener("DOMContentLoaded", function () {
         })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                    throw new Error('Erreur réseau');
                 }
                 return response.json();
             })
@@ -216,7 +216,7 @@ document.addEventListener("DOMContentLoaded", function () {
             })
             .catch(error => {
                 console.error('Erreur lors de la connexion:', error);
-                loginError.textContent = 'Network error';
+                loginError.textContent = 'Erreur réseau';
             });
     });
 
@@ -261,7 +261,7 @@ document.addEventListener("DOMContentLoaded", function () {
         })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                    throw new Error('Erreur réseau');
                 }
                 return response.json();
             })
@@ -471,7 +471,7 @@ document.addEventListener("DOMContentLoaded", function () {
         fetch(`controllers/TodoGetController.php?userId=${userId}`)
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                    throw new Error('Erreur réseau');
                 }
                 return response.json();
             })
@@ -557,7 +557,7 @@ document.addEventListener("DOMContentLoaded", function () {
         fetch(`controllers/ModificationGetController.php?action=fetch_modifications&todoId=${todoId}`)
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                    throw new Error('Erreur réseau');
                 }
                 return response.json();
             })
