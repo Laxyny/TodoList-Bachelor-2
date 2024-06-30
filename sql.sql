@@ -2,7 +2,6 @@
 CREATE DATABASE todo_list;
 USE todo_list;
 
-
 -- Création de la table `utilisateurs`
 CREATE TABLE `utilisateurs` (
     `id_utilisateur` INT AUTO_INCREMENT PRIMARY KEY,
