@@ -14,6 +14,23 @@ document.addEventListener("DOMContentLoaded", function () {
     todoList.id = 'todo-list';
     mainContainer.appendChild(todoList);
 
+    const RegisterForm = document.createElement('form');
+    RegisterForm.id = 'registerForm';
+    RegisterForm.innerHTML = `
+        <input type="text" id="RegisterUtilisateur" placeholder="Utilisateur">
+        <input type="email" id="RegisterEmail" placeholder="Email">
+        <input type="password" id="RegisterPassword" placeholder="Mot de passe">
+        <select id="userGender">
+            <option value="1">Homme</option>
+            <option value="2">Femme</option>
+        </select>
+        <input type="date" id="RegisterBirthdate" placeholder="Date de naissance">
+        <input type="text" id="RegisterLocation" placeholder="Votre ville (Facultatif)">
+        <button type="submit">Créer un compte</button>
+        <div id="loginError"></div>
+    `;
+    mainContainer.appendChild(RegisterForm);
+
     const loginForm = document.createElement('form');
     loginForm.id = 'loginForm';
     loginForm.innerHTML = `
@@ -162,6 +179,14 @@ document.addEventListener("DOMContentLoaded", function () {
     const deletedTodoList = document.getElementById('deletedTodoList');
     const cancelEditButton = document.getElementById('cancelEditButton');
 
+    function showRegisterForm() {
+        RegisterForm.style.display = 'block';
+        logoutButton.style.display = 'none';
+        todoForm.style.display = 'none';
+        adminPanel.style.display = 'none';
+        todoList.innerHTML = '';
+    }
+
     function showLoginForm() {
         loginForm.style.display = 'block';
         logoutButton.style.display = 'none';
@@ -227,6 +252,7 @@ document.addEventListener("DOMContentLoaded", function () {
     logoutButton.addEventListener('click', function () {
         localStorage.removeItem('userId');
         localStorage.removeItem('userRole');
+        showRegisterForm();
         showLoginForm();
     });
 
@@ -634,7 +660,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     const userId = localStorage.getItem('userId');
                     fetchTodos(userId);
                 } else {
-                    console.error('Erreur lors de add modif:', data.error);                }
+                    console.error('Erreur lors de add modif:', data.error);
+                }
             })
             .catch(error => console.error('Erreur lors de add modif:', error));
     }

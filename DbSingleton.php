@@ -3,9 +3,9 @@ class DbSingleton {
     private static $instance = null;
     private $conn;
     private $servername = "localhost";
-    private $username = "todo";
-    private $password = "openit";
-    private $dbname = "todo_list";
+    private $username = "mistigchat";
+    private $password = "GxQPTyZ3RpTNMsMpS5";
+    private $dbname = "mistigchat";
 
     private function __construct() {
         $this->conn = new mysqli($this->servername, $this->username, $this->password, $this->dbname);
